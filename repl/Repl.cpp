@@ -7,7 +7,7 @@
 #include <iostream>
 
 void Repl::Run() {
-    std::cout << "한국어 프로그래밍 언어 프로잭트" << '\n';
+    std::cout << "한국어 프로그래밍 언어 프로젝트" << '\n';
     std::cout << "제작: ezeun, jh-lee-kor, tolelom" << '\n';
 
     Lexer lexer;
