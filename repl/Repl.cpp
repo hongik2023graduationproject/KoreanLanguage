@@ -18,13 +18,11 @@ void Repl::Run() {
         getline(std::cin, s);
 
         lexer.insert(s);
-//        std::cout << lexer.position << ' ' << lexer.readPosition << ' ' << lexer.ch << '\n';
+        std::cout << lexer.position << ' ' << lexer.readPosition << ' ' << lexer.ch << '\n';
 
-        for (int i = 0; i < int(s.length()); ++i) {
+        while (lexer.position < lexer.input.length()) {
             Token tok = lexer.NextToken();
             std::cout << "Token Type: " << tok.Type << ", Token Literal: " << tok.Literal << '\n';
-
-            i = lexer.position;
         }
 
 
