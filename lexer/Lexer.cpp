@@ -76,14 +76,14 @@ Token Lexer::NextToken() {
     } else if (ch == "}") {
         tok = newToken(RBRACE, ch);
     } else if (ch == std::string(1, EOF)) {
-        tok = newToken(EOFi, "");
+        tok = newToken(Eof, "");
     } else {
         if (isLetter(ch)) {
             std::string literal = readIdentifier();
             tok = newToken(tokenFunctions.LookupIdent(literal), literal);
             return tok;
         } else if (isDigit(ch)) {
-            tok = newToken(정수, readNumber());
+            tok = newToken(integer, readNumber());
             return tok;
         } else {
             tok = newToken(ILLEGAL, ch);

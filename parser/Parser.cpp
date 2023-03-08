@@ -4,10 +4,18 @@
 
 #include "Parser.h"
 
-Token Parser::peekToken() {
-
+Parser::Parser(Lexer &lexer) {
+    this->lexer = lexer;
+    nextToken();
+    nextToken();
 }
 
 Token Parser::nextToken() {
-
+    curToken = peekToken;
+    peekToken = nextToken();
 }
+
+Program* Parser::ParseProgram() {
+    return nullptr;
+}
+

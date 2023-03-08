@@ -27,17 +27,17 @@ void lexer_test() {
 //                   "let result = add(five, ten);";
 
     vector<pair<string, TokenType>> tests = {
-            {LET, "let"},
-            {식별자, "five"},
-            {ASSIGN, "="},
-            {정수, "5"},
-            {SEMICOLON, ";"},
-            {LET, "let"},
-            {식별자, "ten"},
-            {ASSIGN, "="},
-            {정수, "10"},
-            {SEMICOLON, ";"},
-            {EOFi, std::string(1, EOF)},
+            {LET,        "let"},
+            {identifier, "five"},
+            {ASSIGN,     "="},
+            {integer,    "5"},
+            {SEMICOLON,  ";"},
+            {LET,        "let"},
+            {identifier, "ten"},
+            {ASSIGN,     "="},
+            {integer,    "10"},
+            {SEMICOLON,  ";"},
+            {Eof,        std::string(1, EOF)},
     };
 
     Lexer lexer;

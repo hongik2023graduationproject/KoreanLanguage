@@ -4,13 +4,19 @@
 
 #ifndef KOREANLANGUAGE_PARSER_H
 #define KOREANLANGUAGE_PARSER_H
+
 #include "../lexer/Lexer.h"
+#include "../ast/Ast.h"
 
 class Parser {
 public:
-    Token peekToken();
-    Token nextToken();
+    Lexer lexer;
+    Token curToken;
+    Token peekToken;
 
+    Parser(Lexer &Lexer);
+    Token nextToken();
+    Program* ParseProgram();
 };
 
 

@@ -15,12 +15,12 @@ struct Token {
     std::string Literal; // 토큰
 };
 
-const TokenType ILLEGAL = "ILLEGAL"; // 알 수 없음
-const TokenType EOFi = "EOF"; // End Of FIle
+const TokenType ILLEGAL = "식별불가"; // 알 수 없음
+const TokenType Eof = "EOF"; // End Of FIle
 
-// 식별자 + 리터럴
-const TokenType 식별자 = "식별자";
-const TokenType 정수 = "정수";
+// identifier + 리터럴
+const TokenType identifier = "식별자";
+const TokenType integer = "정수";
 
 // 연산자
 const TokenType ASSIGN = "ASSIGN"; // =
@@ -38,14 +38,14 @@ const TokenType LT = "LT"; // <
 const TokenType GT = "GT"; // >
 
 // 특수 문자
-const TokenType COMMA = "COMMA";
-const TokenType SEMICOLON = "SEMICOLON";
+const TokenType COMMA = "COMMA"; // ,
+const TokenType SEMICOLON = "SEMICOLON"; // ;
 
 // 괄호
-const TokenType LPAREN = "LPAREN";
-const TokenType RPAREN = "RPAREN";
-const TokenType LBRACE = "LBRACE";
-const TokenType RBRACE = "RBRACE";
+const TokenType LPAREN = "LPAREN"; // (
+const TokenType RPAREN = "RPAREN"; // )
+const TokenType LBRACE = "LBRACE"; // {
+const TokenType RBRACE = "RBRACE"; // }
 
 // 예약어
 const TokenType 함수 = "함수";
@@ -59,12 +59,12 @@ const TokenType RETURN = "RETURN";
 class TokenFunctions {
 public:
     std::map<std::string, TokenType> keywords = {
-            {"fn", 함수},
+            {"함수", 함수},
             {"let", LET},
             {"true", TRUE},
             {"false", FALSE},
-            {"if", IF},
-            {"else", ELSE},
+            {"만약", IF},
+            {"아니면", ELSE},
             {"return", RETURN},
     };
 
@@ -72,7 +72,7 @@ public:
         if (keywords.find(ident) != keywords.end()) {
             return keywords.find(ident)->second;
         }
-        return 식별자;
+        return identifier;
     }
 };
 
