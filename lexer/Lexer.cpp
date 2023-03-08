@@ -6,6 +6,8 @@
 #include <string>
 #include <utility>
 
+#include <iostream>
+
 Token newToken(TokenType tokenType, std::string ch);
 bool isLetter(const std::string& ch);
 bool isDigit(const std::string& ch);
@@ -126,6 +128,7 @@ std::string Lexer::peekChar() {
     } else {
         int charLen = checkCharLen(input[readPosition]);
         ch = input.substr(readPosition, charLen);
+        return ch;
     }
 }
 
