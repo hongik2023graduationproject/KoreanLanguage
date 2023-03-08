@@ -124,11 +124,10 @@ void Lexer::skipWhitespace() {
 
 std::string Lexer::peekChar() {
     if (readPosition >= input.length()) {
-        return std::string(1, EOF); // 빈 문자의 의미, 더 좋은 방법이 있다면 수정할 것
+        return std::string(1, EOF);
     } else {
         int charLen = checkCharLen(input[readPosition]);
-        ch = input.substr(readPosition, charLen);
-        return ch;
+        return input.substr(readPosition, charLen);
     }
 }
 
