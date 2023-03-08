@@ -8,7 +8,7 @@
 
 class Repl {
 public:
-    void Run();
+    [[noreturn]] void Run();
 };
 
 

@@ -13,15 +13,16 @@ public:
     std::string input; // 입력
     int position; // 지금 읽고 있는 문자의 위치
     int readPosition; // 다음 읽을 문자의 위치
-    char ch; // 지금 읽고 있는 문자
-    TokenFunctions tokenFunctions;
+    std::string ch; // 지금 읽고 있는 문자
+    TokenFunctions tokenFunctions; // 식별자인지 사전 정의된 토큰인지 확인하는 클래스
 
     void insert(std::string input); // 문자열 input을 입력
     void readChar(); // 한 문자 읽기
     Token NextToken(); // 다음 토큰을 리턴
-    char peekChar(); // 다음 문자 확인
+    std::string peekChar(); // 다음 문자 확인
     std::string readIdentifier();
     std::string readNumber();
+    int checkCharLen(char c);
     void skipWhitespace();
 };
 

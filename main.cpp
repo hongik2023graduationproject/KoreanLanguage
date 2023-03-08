@@ -37,7 +37,7 @@ void lexer_test() {
             {ASSIGN, "="},
             {정수, "10"},
             {SEMICOLON, ";"},
-            {EOFi, ""},
+            {EOFi, std::string(1, EOF)},
     };
 
     Lexer lexer;

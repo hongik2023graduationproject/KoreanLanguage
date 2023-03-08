@@ -51,7 +51,7 @@ const TokenType RBRACE = "RBRACE";
 const TokenType 함수 = "함수";
 const TokenType LET = "LET";
 const TokenType TRUE = "TRUE";
-const TokenType FALSE = "FASLE";
+const TokenType FALSE = "FALSE";
 const TokenType IF = "IF";
 const TokenType ELSE = "ELSE";
 const TokenType RETURN = "RETURN";
@@ -68,16 +68,13 @@ public:
             {"return", RETURN},
     };
 
-    TokenType LookupIdent(std::string ident) {
+    TokenType LookupIdent(const std::string& ident) {
         if (keywords.find(ident) != keywords.end()) {
             return keywords.find(ident)->second;
         }
         return 식별자;
     }
 };
-
-
-
 
 
 #endif //KOREANLANGUAGE_TOKEN_H

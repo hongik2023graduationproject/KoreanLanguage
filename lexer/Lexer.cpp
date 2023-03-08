@@ -4,23 +4,25 @@
 
 #include "Lexer.h"
 #include <string>
+#include <utility>
 
 Token newToken(TokenType tokenType, std::string ch);
-bool isLetter(char ch);
-bool isDigit(char ch);
+bool isLetter(const std::string& ch);
+bool isDigit(const std::string& ch);
 
 void Lexer::insert(std::string s) {
-    input = s;
+    input = std::move(s);
     readPosition = position = 0;
-    ch = input[readPosition];
-    readPosition++;
+    readChar();
 };
 
 void Lexer::readChar() {
     if (int(input.length()) <= readPosition) {
-        ch = 0;
+        ch = std::string(1, EOF);
     } else {
-        ch = input[readPosition];
+        int charLen = checkCharLen(input[readPosition]);
+        ch = input.substr(readPosition, charLen);
+        readPosition += charLen - 1;
     }
     position = readPosition;
     readPosition++;
@@ -31,89 +33,72 @@ Token Lexer::NextToken() {
 
     skipWhitespace();
 
-    switch (ch) {
-        case '=':
-            if (peekChar() == '=') {
-                char c = ch;
-                readChar();
-                tok = newToken(EQ, std::string(1, c) + std::string(1, ch));
-            } else {
-                tok = newToken(ASSIGN, std::string(1, ch));
-            }
-            break;
-        case '+':
-            tok = newToken(PLUS, std::string(1, ch));
-            break;
-        case '-':
-            tok = newToken(MINUS, std::string(1, ch));
-            break;
-        case '*':
-            tok = newToken(ASTERISK, std::string(1, ch));
-            break;
-        case '/':
-            tok = newToken(SLASH, std::string(1, ch));
-            break;
-        case '!':
-            if (peekChar() == '=') {
-                char c = ch;
-                readChar();
-                tok = newToken(NOT_EQ, std::string(1, c) + std::string(1, ch));
-            } else {
-                tok = newToken(BANG, std::string(1, ch));
-            }
-            break;
-        case '<':
-            tok = newToken(LT, std::string(1, ch));
-            break;
-        case '>':
-            tok = newToken(GT, std::string(1, ch));
-            break;
-        case ',':
-            tok = newToken(COMMA, std::string(1, ch));
-            break;
-        case ';':
-            tok = newToken(SEMICOLON, std::string(1, ch));
-            break;
-        case '(':
-            tok = newToken(LPAREN, std::string(1, ch));
-            break;
-        case ')':
-            tok = newToken(RPAREN, std::string(1, ch));
-            break;
-        case '{':
-            tok = newToken(LBRACE, std::string(1, ch));
-            break;
-        case '}':
-            tok = newToken(RBRACE, std::string(1, ch));
-            break;
-
-        default:
-            if (isLetter(ch)) {
-                std::string literal = readIdentifier();
-                tok = newToken(tokenFunctions.LookupIdent(literal), literal);
-                return tok;
-            } else if (isDigit(ch)) {
-                tok = newToken(정수, readNumber());
-                return tok;
-            } else {
-                tok = newToken(ILLEGAL, std::string(1, ch));
-            }
-            break;
+    if (ch == "=") {
+        if (peekChar() == "=") {
+            std::string c = ch;
+            readChar();
+            tok = newToken(EQ, c + ch);
+        } else {
+            tok = newToken(ASSIGN, ch);
+        }
+    } else if (ch == "+") {
+        tok = newToken(PLUS, ch);
+    } else if (ch == "-") {
+        tok = newToken(MINUS, ch);
+    } else if (ch == "*") {
+        tok = newToken(ASTERISK, ch);
+    } else if (ch == "/") {
+        tok = newToken(SLASH, ch);
+    } else if (ch == "!") {
+        if (peekChar() == "=") {
+            std::string c = ch;
+            readChar();
+            tok = newToken(NOT_EQ, c + ch);
+        } else {
+            tok = newToken(BANG, ch);
+        }
+    } else if (ch == "<") {
+        tok = newToken(LT, ch);
+    } else if (ch == ">") {
+        tok = newToken(GT, ch);
+    } else if (ch == ",") {
+        tok = newToken(COMMA, ch);
+    } else if (ch == ";") {
+        tok = newToken(SEMICOLON, ch);
+    } else if (ch == "(") {
+        tok = newToken(LPAREN, ch);
+    } else if (ch == ")") {
+        tok = newToken(RPAREN, ch);
+    } else if (ch == "{") {
+        tok = newToken(LBRACE, ch);
+    } else if (ch == "}") {
+        tok = newToken(RBRACE, ch);
+    } else if (ch == std::string(1, EOF)) {
+        tok = newToken(EOFi, "");
+    } else {
+        if (isLetter(ch)) {
+            std::string literal = readIdentifier();
+            tok = newToken(tokenFunctions.LookupIdent(literal), literal);
+            return tok;
+        } else if (isDigit(ch)) {
+            tok = newToken(정수, readNumber());
+            return tok;
+        } else {
+            tok = newToken(ILLEGAL, ch);
+        }
     }
+
 
     readChar();
     return tok;
 }
 
 Token newToken(TokenType tokenType, std::string ch) {
-    Token tok;
-    tok.Type = tokenType;
-    tok.Literal = ch;
-    return tok;
+    return Token { std::move(tokenType), std::move(ch) };
 }
 
 std::string Lexer::readIdentifier() {
-    int p = position;
+    int p = position - (int)ch.length() + 1;
     while (isLetter(ch)) {
         readChar();
     }
@@ -130,22 +115,48 @@ std::string Lexer::readNumber() {
 }
 
 void Lexer::skipWhitespace() {
-    while (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r')
+    while (ch == " " || ch == "\t" || ch == "\n" || ch == "\r") {
         readChar();
-}
-
-char Lexer::peekChar() {
-    if (readPosition >= input.length()) {
-        return 0;
-    } else {
-        return input[readPosition];
     }
 }
 
-bool isLetter(char ch) {
-    return ('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z') || ch == '_';
+std::string Lexer::peekChar() {
+    if (readPosition >= input.length()) {
+        return std::string(1, EOF); // 빈 문자의 의미, 더 좋은 방법이 있다면 수정할 것
+    } else {
+        int charLen = checkCharLen(input[readPosition]);
+        ch = input.substr(readPosition, charLen);
+    }
 }
 
-bool isDigit(char ch) {
-    return '0' <= ch && ch <= '9';
+bool isLetter(const std::string& ch) {
+    if ((int)ch.length() == 1)
+        return ("a" <= ch && ch <= "z") || ("A" <= ch && ch <= "Z") || ch == "_";
+    else if ((int)ch.length() == 3)
+        return ("가" <= ch && ch <= "핳");
+    return false;
+}
+
+bool isDigit(const std::string& ch) {
+    return ("0" <= ch && ch <= "9");
+}
+
+int Lexer::checkCharLen(const char c) {
+    int ret = 0;
+    if (c & 0x80) {
+        ret++;
+        if (c & 0x40) {
+            ret++;
+            if (c & 0x20) {
+                ret++;
+                if (c & 0x10) {
+                    ret++;
+                }
+            }
+        }
+    }
+    if (ret == 0)
+        return 1;
+    else
+        return ret;
 }
