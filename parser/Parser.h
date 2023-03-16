@@ -10,15 +10,27 @@
 
 class Parser {
 public:
-    Lexer lexer;
+    Lexer& lexer;
     Token curToken;
     Token peekToken;
 
-    Parser(Lexer &Lexer);
-    Token nextToken();
-    Program* ParseProgram();
-};
+    // 생성자
+    Parser(Lexer& lexer) : lexer(lexer) {
+        nextToken();
+        nextToken();
+    };
 
+    // 다음 토큰을 lexer로부터 읽어온다.
+    void nextToken();
+
+    Program* ParseProgram();
+    StatementNode* parseStatement();
+    AssignStatementNode* parseAssignStatement();
+
+    bool expectPeek(TokenType t);
+    bool curTokenIs(TokenType t);
+    bool peekTokenIs(TokenType t);
+};
 
 
 #endif //KOREANLANGUAGE_PARSER_H

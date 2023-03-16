@@ -8,6 +8,8 @@
 #include <string>
 #include "./../token/Token.h"
 
+// Lexer
+// 문자열을 한 줄씩 받아 토큰으로 바꿔준다.
 class Lexer {
 public:
     std::string input; // 입력
@@ -22,9 +24,11 @@ public:
     std::string peekChar(); // 다음 문자 확인
     std::string readIdentifier();
     std::string readNumber();
-    int checkCharLen(char c);
+    int getCharLen(char c);
     void skipWhitespace();
 };
+
+
 
 
 #endif //KOREANLANGUAGE_LEXER_H

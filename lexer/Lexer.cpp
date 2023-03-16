@@ -8,9 +8,16 @@
 
 #include <iostream>
 
-Token newToken(TokenType tokenType, std::string ch);
+
 bool isLetter(const std::string& ch);
 bool isDigit(const std::string& ch);
+
+// TODO: 이 함수의 위치에 대해서 생각해볼 것
+Token newToken(TokenType tokenType, std::string ch) {
+    return Token { std::move(tokenType), std::move(ch) };
+}
+
+
 
 void Lexer::insert(std::string s) {
     input = std::move(s);
@@ -22,7 +29,7 @@ void Lexer::readChar() {
     if (int(input.length()) <= readPosition) {
         ch = std::string(1, EOF);
     } else {
-        int charLen = checkCharLen(input[readPosition]);
+        int charLen = getCharLen(input[readPosition]);
         ch = input.substr(readPosition, charLen);
         readPosition += charLen - 1;
     }
@@ -95,9 +102,7 @@ Token Lexer::NextToken() {
     return tok;
 }
 
-Token newToken(TokenType tokenType, std::string ch) {
-    return Token { std::move(tokenType), std::move(ch) };
-}
+
 
 std::string Lexer::readIdentifier() {
     int p = position - (int)ch.length() + 1;
@@ -126,7 +131,7 @@ std::string Lexer::peekChar() {
     if (readPosition >= input.length()) {
         return std::string(1, EOF);
     } else {
-        int charLen = checkCharLen(input[readPosition]);
+        int charLen = getCharLen(input[readPosition]);
         return input.substr(readPosition, charLen);
     }
 }
@@ -143,7 +148,7 @@ bool isDigit(const std::string& ch) {
     return ("0" <= ch && ch <= "9");
 }
 
-int Lexer::checkCharLen(const char c) {
+int Lexer::getCharLen(const char c) {
     int ret = 0;
     if (c & 0x80) {
         ret++;

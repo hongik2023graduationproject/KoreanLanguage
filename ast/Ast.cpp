@@ -4,10 +4,21 @@
 
 #include "Ast.h"
 
+// StatementNode
+std::string StatementNode::TokenLiteral() {
+    return "";
+}
+
+
+
 // Program
+Program::Program() {
+    statements.clear();
+}
+
 std::string Program::TokenLiteral() {
-    if (Statements.size() > 0) {
-        return Statements[0].TokenLiteral();
+    if (statements.size() > 0) {
+        return statements[0].TokenLiteral();
     } else {
         return "";
     }

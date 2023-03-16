@@ -9,26 +9,36 @@
 #include <vector>
 #include <string>
 
-
+// interface
 class Node {
 public:
-    virtual std::string TokenLiteral() = 0;
+    std::string TokenLiteral();
 };
 
 class StatementNode : public Node {
 public:
-    virtual void statementNode() = 0;
+    std::string TokenLiteral();
+    void statementNode();
 };
 
 class ExpressionNode : public Node {
 public:
-    virtual void expressionNode() = 0;
+    std::string TokenLiteral();
+    void expressionNode();
 };
 
+
+
+
+// Node 구현체
+
+// root Node
 class Program : public Node {
 public:
+    std::vector<StatementNode> statements;
+
+    Program();
     std::string TokenLiteral();
-    std::vector<StatementNode> Statements;
 };
 
 class IdentifierNode : public ExpressionNode {
@@ -36,9 +46,20 @@ public:
     Token token;
     std::string value;
 
+    IdentifierNode(Token token, std::string value) : token(token), value(value) {};
     std::string TokenLiteral();
     void expressionNode();
 };
 
+// <identifier> = <expression>
+class AssignStatementNode : public StatementNode {
+public:
+    Token token;
+    IdentifierNode* name;
+    ExpressionNode* value;
+
+    std::string TokenLiteral();
+    void expressionNode();
+};
 
 #endif //KOREANLANGUAGE_AST_H
