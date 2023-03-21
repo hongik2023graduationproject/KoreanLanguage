@@ -4,11 +4,7 @@
 
 using namespace std;
 
-void lexer_test();
-
 int main() {
     Repl repl;
     repl.Run();
-
-    return 0;
 }

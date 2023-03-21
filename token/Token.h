@@ -15,12 +15,15 @@ struct Token {
     std::string Literal; // 토큰
 };
 
-const TokenType ILLEGAL = "식별불가"; // 알 수 없음
+
+// TokenType...
+
+const TokenType ILLEGAL = "ILLEGAL"; // 알 수 없음
 const TokenType Eof = "EOF"; // End Of FIle
 
-// identifier + 리터럴
-const TokenType identifier = "식별자";
-const TokenType integer = "정수";
+// IDENTIFIER + 리터럴
+const TokenType IDENTIFIER = "IDENTIFIER";
+const TokenType INTEGER = "INTEGER";
 
 // 연산자
 const TokenType ASSIGN = "ASSIGN"; // =
@@ -48,7 +51,7 @@ const TokenType LBRACE = "LBRACE"; // {
 const TokenType RBRACE = "RBRACE"; // }
 
 // 예약어
-const TokenType 함수 = "함수";
+const TokenType FUNCTION = "FUNCTION";
 const TokenType LET = "LET";
 const TokenType TRUE = "TRUE";
 const TokenType FALSE = "FALSE";
@@ -59,7 +62,7 @@ const TokenType RETURN = "RETURN";
 class TokenFunctions {
 public:
     std::map<std::string, TokenType> keywords = {
-            {"함수", 함수},
+            {"함수", FUNCTION},
             {"let", LET},
             {"true", TRUE},
             {"false", FALSE},
@@ -72,7 +75,7 @@ public:
         if (keywords.find(ident) != keywords.end()) {
             return keywords.find(ident)->second;
         }
-        return identifier;
+        return IDENTIFIER;
     }
 
 

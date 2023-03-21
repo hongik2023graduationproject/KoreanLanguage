@@ -4,10 +4,27 @@
 
 #include "Ast.h"
 
-// StatementNode
-std::string StatementNode::TokenLiteral() {
+#include <iostream>
+
+// Node
+std::string Node::TokenLiteral() {}
+std::string Node::String() {}
+
+
+
+// Statement
+std::string Statement::TokenLiteral() {
     return "";
 }
+std::string Statement::String() {}
+void Statement::statementNode() {}
+
+
+
+// Expression
+std::string Expression::TokenLiteral() {}
+std::string Expression::String() {}
+void Expression::expressionNode() {}
 
 
 
@@ -15,7 +32,6 @@ std::string StatementNode::TokenLiteral() {
 Program::Program() {
     statements.clear();
 }
-
 std::string Program::TokenLiteral() {
     if (statements.size() > 0) {
         return statements[0].TokenLiteral();
@@ -23,10 +39,71 @@ std::string Program::TokenLiteral() {
         return "";
     }
 }
+std::string Program::String() {
+    std::string s;
+    for (auto it : statements) {
+        s += it.String() + '\n';
+    }
+    return s;
+}
+
+
 
 // Identifier Node
-std::string IdentifierNode::TokenLiteral() {
+std::string Identifier::TokenLiteral() {
     return token.Literal;
 }
-void IdentifierNode::expressionNode() {}
+std::string Identifier::String() {
+    return value;
+}
+void Identifier::expressionNode() {}
+
+
+
+// AssignStatement
+std::string AssignStatement::TokenLiteral() {
+    return token.Literal;
+}
+std::string AssignStatement::String() {
+    std::string s = TokenLiteral() + " " + name->String() + " = ";
+    if (value != nullptr) {
+        s += value->String() + "\n";
+    }
+
+    return s;
+}
+void AssignStatement::statementNode() {}
+
+
+
+// ReturnStatement
+std::string ReturnStatement::TokenLiteral() {
+    return token.Literal;
+}
+std::string ReturnStatement::String() {
+    std::string s = TokenLiteral() + " ";
+    if (ReturnValue != nullptr) {
+        s += ReturnValue->String();
+    }
+
+    return s;
+}
+void ReturnStatement::statementNode() {}
+
+
+
+// ExpressionStatement
+std::string ExpressionStatement::TokenLiteral() {
+    return token.Literal;
+}
+std::string ExpressionStatement::String() {
+    if (expression != nullptr) {
+        return expression->String();
+    }
+    return "";
+}
+void ExpressionStatement::statementNode() {}
+
+
+
 

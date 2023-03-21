@@ -4,24 +4,50 @@
 
 #include "Repl.h"
 #include "../lexer/Lexer.h"
+#include "../parser/Parser.h"
 #include <iostream>
 
+
+// TODO: repl에서 read해 parsing 및 lexer만 구현이 되어 있는 상태
+//     - 추가로 구현이 진행됨에 따라 변경이 필요
 [[noreturn]] void Repl::Run() {
     std::cout << "한국어 프로그래밍 언어 프로젝트" << '\n';
     std::cout << "제작: ezeun, jh-lee-kor, tolelom" << '\n';
 
-    Lexer lexer;
-
     while (true) {
+        // input
         std::string s;
         std::cout << ">>> ";
         getline(std::cin, s);
 
-        lexer.insert(s);
-        while (lexer.position < lexer.input.length()) {
-            Token tok = lexer.NextToken();
-            std::cout << "Token Type: " << tok.Type << ", Token Literal: " << tok.Literal << '\n';
+        // lexing
+        Lexer* lexer = new Lexer;
+        lexer->insert(s);
+
+        // parsing
+        // TODO: lexing까지는 작동 확인되었으나 parser를 거치면서 문제가 생기고 있다.
+        Parser* parser = new Parser(*lexer);
+        Program* program = parser->ParseProgram(); // program은 parsing된 프로그램의 root node
+
+        // if exist error
+        if (parser->Errors().size() != 0) {
+            for (auto it : parser->Errors()) {
+                std::cout << it << '\n';
+            }
+            continue;
         }
+
+        // else, print
+        std::cout << program->String() << '\n';
+
+
+        // TODO: 디버깅용 나중에 삭제할 것
         std::cout << s << '\n';
+
+
+        // TODO: 매 입력 라인마다 new, delete를 하는 게 맞는지 생각해보기
+        delete program;
+        delete parser;
+        delete lexer;
     }
 }

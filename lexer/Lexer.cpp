@@ -5,18 +5,12 @@
 #include "Lexer.h"
 #include <string>
 #include <utility>
-
 #include <iostream>
 
 
 bool isLetter(const std::string& ch);
 bool isDigit(const std::string& ch);
-
-// TODO: 이 함수의 위치에 대해서 생각해볼 것
-Token newToken(TokenType tokenType, std::string ch) {
-    return Token { std::move(tokenType), std::move(ch) };
-}
-
+Token newToken(TokenType tokenType, std::string ch);
 
 
 void Lexer::insert(std::string s) {
@@ -90,7 +84,7 @@ Token Lexer::NextToken() {
             tok = newToken(tokenFunctions.LookupIdent(literal), literal);
             return tok;
         } else if (isDigit(ch)) {
-            tok = newToken(integer, readNumber());
+            tok = newToken(INTEGER, readNumber());
             return tok;
         } else {
             tok = newToken(ILLEGAL, ch);
@@ -166,4 +160,10 @@ int Lexer::getCharLen(const char c) {
         return 1;
     else
         return ret;
+}
+
+
+
+Token newToken(TokenType tokenType, std::string ch) {
+    return Token { std::move(tokenType), std::move(ch) };
 }

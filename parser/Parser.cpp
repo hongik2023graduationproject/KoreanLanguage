@@ -6,6 +6,8 @@
 #include "../ast/Ast.h"
 #include "../lexer/Lexer.h"
 
+#include <iostream>
+
 // Parser
 void Parser::nextToken() {
     curToken = peekToken;
@@ -16,7 +18,10 @@ Program* Parser::ParseProgram() {
     Program* program = new Program; // root node
 
     while (curToken.Type != Eof) {
-        StatementNode* stmt = parseStatement();
+        std::cout << curToken.Type << ' ' << peekToken.Type << '\n'; // debug
+
+        Statement* stmt = parseStatement();
+
         if (stmt != nullptr) {
             program->statements.push_back(*stmt);
         }
@@ -26,27 +31,67 @@ Program* Parser::ParseProgram() {
 }
 
 
-
-
-StatementNode* Parser::parseStatement() {
-    if (curToken.Type == identifier && peekToken.Type == EQ) {
+Statement* Parser::parseStatement() {
+    if (curToken.Type == IDENTIFIER && peekToken.Type == ASSIGN) {
         return parseAssignStatement();
+    } else if (curToken.Type == RETURN) {
+        return parseReturnStatement();
     } else {
-        return nullptr;
+        return parseExpressionStatement();
     }
 }
 
-AssignStatementNode* Parser::parseAssignStatement() {
-    AssignStatementNode *stmt = new AssignStatementNode;
+Expression* Parser::parseExpression(int precedence) {
+    if (prefixParseFns.find(curToken.Type) == prefixParseFns.end())
+        return nullptr;
 
-    stmt->token = peekToken; // =
+    prefixParseFn prefix = prefixParseFns.find(curToken.Type)->second;
 
-    stmt->name = new IdentifierNode(curToken, curToken.Literal);
+
+}
+
+AssignStatement* Parser::parseAssignStatement() {
+    AssignStatement *stmt = new AssignStatement;
+
+    stmt->name = new Identifier;
+    // TODO: 생성자 만들어서 코드 정리하기
+    stmt->name->token = curToken;
+    stmt->name->value = curToken.Literal;
 
     nextToken();
+    stmt->token = curToken; // =
+
 
     // TODO: EOF을 만날 때까지 표현식을 건너뛴다.
+    //      -우항은 아직 패스
     while (curTokenIs(Eof)) {
+        nextToken();
+    }
+
+    return stmt;
+}
+
+
+ReturnStatement* Parser::parseReturnStatement() {
+    ReturnStatement* stmt = new ReturnStatement;
+    stmt->token = curToken; // return 토큰
+
+    // TODO: EOF을 만날 때까지 표현식을 건너뛴다.
+    //      -우항은 아직 패스
+    while (curTokenIs(Eof)) {
+        nextToken();
+    }
+
+    return stmt;
+}
+
+ExpressionStatement* Parser::parseExpressionStatement() {
+    ExpressionStatement* stmt = new ExpressionStatement;
+    stmt->token = curToken;
+    stmt->expression = parseExpression(LOWEST); // expression parsing
+
+    // TODO: 우리는 Eof로 처리하므로 다음 토큰이 Eof가 아니라면 에러 처리를 해야한다.
+    if (peekTokenIs(Eof)) {
         nextToken();
     }
 
@@ -60,6 +105,7 @@ bool Parser::expectPeek(TokenType t) {
         nextToken();
         return true;
     } else {
+        peekError(t);
         return false;
     }
 }
@@ -70,4 +116,13 @@ bool Parser::curTokenIs(TokenType t) {
 
 bool Parser::peekTokenIs(TokenType t) {
     return peekToken.Type == t;
+}
+
+std::vector<std::string> Parser::Errors() {
+    return errors;
+}
+
+void Parser::peekError(TokenType t) {
+    std::string msg = "예상 토큰은 " + t + "입니다. 하지만 실제 토큰은 " + peekToken.Type + "입니다.\n";
+    errors.push_back(msg);
 }

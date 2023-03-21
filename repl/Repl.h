@@ -6,9 +6,10 @@
 #define KOREANLANGUAGE_REPL_H
 
 
+// Read Eval Print Loop
 class Repl {
 public:
-    [[noreturn]] void Run();
+    [[noreturn]] void Run(); // 시작 함수
 };
 
 
