@@ -6,36 +6,13 @@
 
 #include <iostream>
 
-// Node
-std::string Node::TokenLiteral() {}
-std::string Node::String() {}
-
-
-
-// Statement
-std::string Statement::TokenLiteral() {
-}
-std::string Statement::String() {}
-void Statement::statementNode() {}
-
-
-
-// Expression
-std::string Expression::TokenLiteral() {}
-std::string Expression::String() {
-    return "바보";
-}
-void Expression::expressionNode() {}
-
-
-
 // Program
 Program::Program() {
     statements.clear();
 }
 std::string Program::TokenLiteral() {
     if (statements.size() > 0) {
-        return statements[0].TokenLiteral();
+        return statements[0]->TokenLiteral();
     } else {
         return "";
     }
@@ -43,8 +20,7 @@ std::string Program::TokenLiteral() {
 std::string Program::String() {
     std::string s;
     for (auto it : statements) {
-        std::cout << "Debug - Program::String: " << it.token.Type << '\n';
-        s += it.String() + '\n';
+        s += it->String();
     }
     return s;
 }
@@ -99,7 +75,6 @@ std::string ExpressionStatement::TokenLiteral() {
     return token.Literal;
 }
 std::string ExpressionStatement::String() {
-    std::cout << "DEBUG: ExpressionStatement\n";
     if (expression != nullptr) {
         return expression->String();
     }

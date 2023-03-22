@@ -14,25 +14,25 @@ class Node {
 public:
     Token token;
 
-    std::string TokenLiteral();
-    std::string String(); // Debug, 출력을 확인하는 용도이므로 최종 단계 전까지 삭제 금지
+    virtual std::string TokenLiteral() = 0;
+    virtual std::string String() = 0; // Debug, 출력을 확인하는 용도이므로 최종 단계 전까지 삭제 금지
 };
 
 class Statement : public Node {
 public:
 
-    std::string TokenLiteral();
-    std::string String();
-    void statementNode();
+//    virtual std::string TokenLiteral();
+//    virtual std::string String();
+    virtual void statementNode() = 0;
 };
 
 class Expression : public Node {
 public:
     Token token;
 
-    std::string TokenLiteral();
-    std::string String();
-    void expressionNode();
+//    virtual std::string TokenLiteral();
+//    virtual std::string String();
+    virtual void expressionNode() = 0;
 };
 
 
@@ -42,11 +42,11 @@ public:
 // statements 백터에 프로그램을 파싱해서 순서대로 저장한다.
 class Program : public Node {
 public:
-    std::vector<Statement> statements;
+    std::vector<Statement*> statements;
 
     Program();
-    std::string TokenLiteral();
-    std::string String();
+    std::string TokenLiteral() override;
+    std::string String() override;
 };
 
 

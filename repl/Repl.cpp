@@ -41,11 +41,6 @@
         // else, print
         std::cout << program->String() << '\n';
 
-
-        // TODO: 디버깅용 나중에 삭제할 것
-        std::cout << s << '\n';
-
-
         // TODO: 매 입력 라인마다 new, delete를 하는 게 맞는지 생각해보기
         delete program;
         delete parser;

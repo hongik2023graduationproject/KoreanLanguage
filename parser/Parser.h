@@ -33,7 +33,6 @@ public:
         Identifier* identifier = new Identifier;
         identifier->token = curToken;
         identifier->value = curToken.Literal;
-        std::cout << "DEBUG parseIdentifier "  << identifier->String() << '\n';
         return identifier;
     }
 
