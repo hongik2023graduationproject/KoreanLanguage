@@ -10,6 +10,7 @@
 
 // Parser
 void Parser::nextToken() {
+    std::cout << "Debug: nextToken" << '\n';
     curToken = peekToken;
     peekToken = lexer.NextToken();
 }
@@ -18,15 +19,23 @@ Program* Parser::ParseProgram() {
     Program* program = new Program; // root node
 
     while (curToken.Type != Eof) {
-        std::cout << curToken.Type << ' ' << peekToken.Type << '\n'; // debug
-
         Statement* stmt = parseStatement();
 
         if (stmt != nullptr) {
             program->statements.push_back(*stmt);
         }
-        nextToken();
+
+
+        std::cout << "추가정보: " << stmt->token.Type << ' ' << stmt->token.Literal << '\n';
+
+        // TODO: 임시로 if문 적용
+        if (peekTokenIs(Eof)) {
+            break;
+        }
+
+        nextToken(); // 마지막 토큰인 Eof 이후에 실행되면 SIGTRAP 오류
     }
+
     return program;
 }
 
@@ -39,15 +48,6 @@ Statement* Parser::parseStatement() {
     } else {
         return parseExpressionStatement();
     }
-}
-
-Expression* Parser::parseExpression(int precedence) {
-    if (prefixParseFns.find(curToken.Type) == prefixParseFns.end())
-        return nullptr;
-
-    prefixParseFn prefix = prefixParseFns.find(curToken.Type)->second;
-
-
 }
 
 AssignStatement* Parser::parseAssignStatement() {
@@ -87,17 +87,34 @@ ReturnStatement* Parser::parseReturnStatement() {
 
 ExpressionStatement* Parser::parseExpressionStatement() {
     ExpressionStatement* stmt = new ExpressionStatement;
+    std::cout << "DEBUG parseExpressionStatement: " << curToken.Literal << '\n';
     stmt->token = curToken;
+    std::cout << "추가정보: " << stmt->token.Type << ' ' << stmt->token.Literal << '\n';
     stmt->expression = parseExpression(LOWEST); // expression parsing
 
+    std::cout << "추가정보: " << stmt->token.Type << ' ' << stmt->token.Literal << '\n';
+
     // TODO: 우리는 Eof로 처리하므로 다음 토큰이 Eof가 아니라면 에러 처리를 해야한다.
-    if (peekTokenIs(Eof)) {
+    //      -식별자만 한 줄에 주어질 경우 에러로 처리하지 않으려면 에러처리를 안해도 될 거 같다.
+
+    while (!peekTokenIs(Eof)) {
         nextToken();
     }
 
+    std::cout << "추가정보: " << stmt->token.Type << ' ' << stmt->token.Literal << '\n';
     return stmt;
 }
 
+Expression* Parser::parseExpression(int precedence) {
+    if (prefixParseFns.find(curToken.Type) == prefixParseFns.end())
+        return nullptr;
+
+    auto prefix = prefixParseFns.find(curToken.Type)->second;
+
+    Expression* leftExp = (this->*prefix)();
+
+    return leftExp;
+}
 
 
 bool Parser::expectPeek(TokenType t) {

@@ -12,12 +12,15 @@
 // interface
 class Node {
 public:
+    Token token;
+
     std::string TokenLiteral();
     std::string String(); // Debug, 출력을 확인하는 용도이므로 최종 단계 전까지 삭제 금지
 };
 
 class Statement : public Node {
 public:
+
     std::string TokenLiteral();
     std::string String();
     void statementNode();
@@ -25,6 +28,8 @@ public:
 
 class Expression : public Node {
 public:
+    Token token;
+
     std::string TokenLiteral();
     std::string String();
     void expressionNode();

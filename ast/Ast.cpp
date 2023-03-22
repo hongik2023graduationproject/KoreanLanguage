@@ -14,7 +14,6 @@ std::string Node::String() {}
 
 // Statement
 std::string Statement::TokenLiteral() {
-    return "";
 }
 std::string Statement::String() {}
 void Statement::statementNode() {}
@@ -23,7 +22,9 @@ void Statement::statementNode() {}
 
 // Expression
 std::string Expression::TokenLiteral() {}
-std::string Expression::String() {}
+std::string Expression::String() {
+    return "바보";
+}
 void Expression::expressionNode() {}
 
 
@@ -42,6 +43,7 @@ std::string Program::TokenLiteral() {
 std::string Program::String() {
     std::string s;
     for (auto it : statements) {
+        std::cout << "Debug - Program::String: " << it.token.Type << '\n';
         s += it.String() + '\n';
     }
     return s;
@@ -97,9 +99,11 @@ std::string ExpressionStatement::TokenLiteral() {
     return token.Literal;
 }
 std::string ExpressionStatement::String() {
+    std::cout << "DEBUG: ExpressionStatement\n";
     if (expression != nullptr) {
         return expression->String();
     }
+
     return "";
 }
 void ExpressionStatement::statementNode() {}

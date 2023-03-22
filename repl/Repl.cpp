@@ -29,6 +29,7 @@
         Parser* parser = new Parser(*lexer);
         Program* program = parser->ParseProgram(); // program은 parsing된 프로그램의 root node
 
+
         // if exist error
         if (parser->Errors().size() != 0) {
             for (auto it : parser->Errors()) {

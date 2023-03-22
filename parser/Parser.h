@@ -11,15 +11,8 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <iostream>
 
-
-class prefixParseFn {
-    void func();
-};
-
-class infixParseFn {
-    void func();
-};
 
 class Parser {
 public:
@@ -29,12 +22,29 @@ public:
     Token curToken;
     Token peekToken;
 
+
+    // 전위, 중위 연산자 부분
+    using prefixParseFn = Expression* (Parser::*)();
+    typedef Expression* (Parser::*infixParseFn)();
     std::map<TokenType, prefixParseFn> prefixParseFns;
     std::map<TokenType, infixParseFn> infixParseFns;
+
+    Expression* parseIdentifier() {
+        Identifier* identifier = new Identifier;
+        identifier->token = curToken;
+        identifier->value = curToken.Literal;
+        std::cout << "DEBUG parseIdentifier "  << identifier->String() << '\n';
+        return identifier;
+    }
+
 
     // 생성자
     Parser(Lexer& lexer) : lexer(lexer) {
         errors.clear();
+        prefixParseFns.clear();
+        infixParseFns.clear();
+
+        registerPrefix(IDENTIFIER, &Parser::parseIdentifier);
 
         nextToken();
         nextToken();
@@ -69,12 +79,12 @@ public:
 // 우선 순위
 enum precedence {
     LOWEST,
-    EQUALS,
-    LESSGREATER,
-    SUM,
-    PRODUCT,
-    PREFIX,
-    CALL,
+    EQUALS, // ==
+    LESSGREATER, // >, <
+    SUM, // +
+    PRODUCT, // *
+    PREFIX, // -X, !X
+    CALL, // myFunc(X)
 };
 
 
