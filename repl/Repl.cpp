@@ -25,7 +25,6 @@
         lexer->insert(s);
 
         // parsing
-        // TODO: lexing까지는 작동 확인되었으나 parser를 거치면서 문제가 생기고 있다.
         Parser* parser = new Parser(*lexer);
         Program* program = parser->ParseProgram(); // program은 parsing된 프로그램의 root node
 

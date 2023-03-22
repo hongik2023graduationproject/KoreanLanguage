@@ -20,18 +20,11 @@ public:
 
 class Statement : public Node {
 public:
-
-//    virtual std::string TokenLiteral();
-//    virtual std::string String();
     virtual void statementNode() = 0;
 };
 
 class Expression : public Node {
 public:
-    Token token;
-
-//    virtual std::string TokenLiteral();
-//    virtual std::string String();
     virtual void expressionNode() = 0;
 };
 
@@ -56,9 +49,9 @@ public:
     Token token;
     std::string value;
 
-    std::string TokenLiteral();
-    std::string String();
-    void expressionNode();
+    std::string TokenLiteral() override;
+    std::string String() override;
+    void expressionNode() override;
 };
 
 
@@ -69,9 +62,9 @@ public:
     Expression* expression;
 
 
-    std::string TokenLiteral();
-    std::string String();
-    void statementNode();
+    std::string TokenLiteral() override;
+    std::string String() override;
+    void statementNode() override;
 };
 
 // AssignStatement: 값을 변수에 할당하는 문법
@@ -84,9 +77,9 @@ public:
     Expression* value; // 우변
 
 
-    std::string TokenLiteral();
-    std::string String();
-    void statementNode();
+    std::string TokenLiteral() override;
+    std::string String() override;
+    void statementNode() override;
 };
 
 
@@ -98,9 +91,9 @@ public:
     Token token; // return 토큰
     Expression* ReturnValue; // value
 
-    std::string TokenLiteral();
-    std::string String();
-    void statementNode();
+    std::string TokenLiteral() override;
+    std::string String() override;
+    void statementNode() override;
 };
 
 
