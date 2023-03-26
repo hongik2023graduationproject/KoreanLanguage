@@ -4,7 +4,6 @@
 
 #include "Ast.h"
 
-#include <iostream>
 
 // Program
 Program::Program() {
@@ -83,6 +82,37 @@ std::string ExpressionStatement::String() {
 }
 void ExpressionStatement::statementNode() {}
 
+
+// IntegerLiteral
+// 정수
+std::string IntegerLiteral::TokenLiteral() {
+    return token.Literal;
+}
+std::string IntegerLiteral::String() {
+    return token.Literal;
+}
+void IntegerLiteral::expressionNode() {}
+
+
+// PrefixExpression
+std::string PrefixExpression::TokenLiteral() {
+    return token.Literal;
+}
+std::string PrefixExpression::String() {
+    return "(" + Operator + Right->String() + ")";
+}
+void PrefixExpression::expressionNode() {}
+
+
+
+// InfixExpression
+std::string InfixExpression::TokenLiteral() {
+    return token.Literal;
+}
+std::string InfixExpression::String() {
+    return "(" + Left->String() + " " + Operator + " " + Right->String() + ")";
+}
+void InfixExpression::expressionNode() {}
 
 
 

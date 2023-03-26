@@ -5,6 +5,10 @@
 #ifndef KOREANLANGUAGE_REPL_H
 #define KOREANLANGUAGE_REPL_H
 
+#include <iostream>
+
+#include "../parser/Parser.h"
+#include "../lexer/Lexer.h"
 
 // Read Eval Print Loop
 class Repl {

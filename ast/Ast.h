@@ -5,9 +5,10 @@
 #ifndef KOREANLANGUAGE_AST_H
 #define KOREANLANGUAGE_AST_H
 
-#include "../token/Token.h"
-#include <vector>
 #include <string>
+#include <vector>
+
+#include "../token/Token.h"
 
 // interface
 class Node {
@@ -97,6 +98,40 @@ public:
 };
 
 
+class IntegerLiteral : public Expression {
+public:
+    Token token;
+    int value;
 
+    std::string TokenLiteral() override;
+    std::string String() override;
+    void expressionNode() override;
+};
+
+
+class PrefixExpression : public Expression {
+public:
+    Token token;
+    std::string Operator; // ISSUE: 소문자 operator는 키워드 겹침
+    Expression* Right;
+
+    std::string TokenLiteral() override;
+    std::string String() override;
+    void expressionNode() override;
+};
+
+class InfixExpression : public Expression {
+public:
+    Token token;
+    Expression* Left;
+    std::string Operator;
+    Expression* Right;
+
+    std::string TokenLiteral() override;
+    std::string String() override;
+    void expressionNode() override;
+
+
+};
 
 #endif //KOREANLANGUAGE_AST_H

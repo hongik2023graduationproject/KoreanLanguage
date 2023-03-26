@@ -3,9 +3,6 @@
 //
 
 #include "Repl.h"
-#include "../lexer/Lexer.h"
-#include "../parser/Parser.h"
-#include <iostream>
 
 
 // TODO: repl에서 read해 parsing 및 lexer만 구현이 되어 있는 상태
@@ -24,6 +21,13 @@
         Lexer* lexer = new Lexer;
         lexer->insert(s);
 
+//       // Lexer test code
+//        for ( ; lexer->position < lexer->input.size(); ) {
+//            Token t = lexer->NextToken();
+//            std::cout << "Token Type: " << t.Type << ", Token Literal: " << t.Literal << '\n';
+//        }
+
+
         // parsing
         Parser* parser = new Parser(*lexer);
         Program* program = parser->ParseProgram(); // program은 parsing된 프로그램의 root node
@@ -37,7 +41,7 @@
             continue;
         }
 
-        // else, print
+        // else print
         std::cout << program->String() << '\n';
 
         // TODO: 매 입력 라인마다 new, delete를 하는 게 맞는지 생각해보기

@@ -3,12 +3,51 @@
 //
 
 #include "Parser.h"
-#include "../ast/Ast.h"
-#include "../lexer/Lexer.h"
 
-#include <iostream>
 
 // Parser
+
+Expression* Parser::parseIdentifier() {
+    Identifier* identifier = new Identifier;
+    identifier->token = curToken;
+    identifier->value = curToken.Literal;
+    return identifier;
+}
+Expression* Parser::parseIntegerLiteral() {
+    IntegerLiteral* lit = new IntegerLiteral;
+    lit->token = curToken;
+    lit->value = stoi(curToken.Literal);
+
+    // TODO: string to integer처리 중 발생하는 에러처리 필요
+    return lit;
+}
+Expression* Parser::parsePrefixExpression() {
+    PrefixExpression* expression = new PrefixExpression;
+    expression->token = curToken;
+    expression->Operator = curToken.Literal;
+
+    nextToken();
+    expression->Right = parseExpression(PREFIX);
+
+    return expression;
+}
+
+Expression* Parser::parseInfixExpression(Expression* left) {
+    InfixExpression* expression = new InfixExpression;
+    expression->token = curToken;
+    expression->Operator = curToken.Literal;
+    expression->Left = left;
+
+    int precedence = curPrecedence();
+    nextToken();
+    expression->Right = parseExpression(precedence);
+
+    return expression;
+}
+
+
+
+
 void Parser::nextToken() {
     curToken = peekToken;
     peekToken = lexer.NextToken();
@@ -99,12 +138,24 @@ ExpressionStatement* Parser::parseExpressionStatement() {
 }
 
 Expression* Parser::parseExpression(int precedence) {
-    if (prefixParseFns.find(curToken.Type) == prefixParseFns.end())
+    if (prefixParseFns.find(curToken.Type) == prefixParseFns.end()) {
+        noPrefixParseFnError(curToken.Type);
         return nullptr;
+    }
 
     auto prefix = prefixParseFns.find(curToken.Type)->second;
-
     Expression* leftExp = (this->*prefix)();
+
+    while (!peekTokenIs(Eof) && precedence < peekPrecedence()) {
+        if (infixParseFns.find(peekToken.Type) == infixParseFns.end()) {
+            return leftExp;
+        }
+        auto infix = infixParseFns.find(peekToken.Type)->second;
+
+        nextToken();
+
+        leftExp = (this->*infix)(leftExp);
+    }
 
     return leftExp;
 }
@@ -135,4 +186,25 @@ std::vector<std::string> Parser::Errors() {
 void Parser::peekError(TokenType t) {
     std::string msg = "예상 토큰은 " + t + "입니다. 하지만 실제 토큰은 " + peekToken.Type + "입니다.\n";
     errors.push_back(msg);
+}
+
+void Parser::noPrefixParseFnError(std::string t) {
+    errors.push_back("no prefix parse function for " + t + " found.");
+}
+
+
+int Parser::curPrecedence() {
+    // TODO: find 함수를 두 번 사용해서 비효율적 나중에 수정하기
+   if (precedences.find(curToken.Type) != precedences.end()) {
+       return precedences.find(curToken.Type)->second;
+   }
+   return LOWEST;
+}
+
+int Parser::peekPrecedence() {
+    // TODO: find 함수를 두 번 사용해서 비효율적 나중에 수정하기
+    if (precedences.find(peekToken.Type) != precedences.end()) {
+        return precedences.find(peekToken.Type)->second;
+    }
+    return LOWEST;
 }

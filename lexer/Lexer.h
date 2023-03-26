@@ -5,7 +5,11 @@
 #ifndef KOREANLANGUAGE_LEXER_H
 #define KOREANLANGUAGE_LEXER_H
 
+
 #include <string>
+#include <utility>
+#include <iostream>
+
 #include "./../token/Token.h"
 
 // Lexer
@@ -28,8 +32,6 @@ public:
     int getCharLen(char c);
     void skipWhitespace();
 };
-
-
 
 
 #endif //KOREANLANGUAGE_LEXER_H

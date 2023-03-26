@@ -3,9 +3,6 @@
 //
 
 #include "Lexer.h"
-#include <string>
-#include <utility>
-#include <iostream>
 
 
 bool isLetter(const std::string& ch);

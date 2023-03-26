@@ -5,13 +5,14 @@
 #ifndef KOREANLANGUAGE_PARSER_H
 #define KOREANLANGUAGE_PARSER_H
 
-#include "../lexer/Lexer.h"
-#include "../ast/Ast.h"
-
+#include <iostream>
 #include <vector>
 #include <string>
 #include <map>
-#include <iostream>
+
+#include "../lexer/Lexer.h"
+#include "../ast/Ast.h"
+
 
 
 class Parser {
@@ -22,19 +23,39 @@ public:
     Token curToken;
     Token peekToken;
 
+    // 우선 순위
+    // TODO: 나중에 enum class로 변경이 가능하다면 변경하기
+    enum precedence {
+        LOWEST,
+        EQUALS, // ==
+        LESSGREATER, // >, <
+        SUM, // +
+        PRODUCT, // *
+        PREFIX, // -X, !X
+        CALL, // myFunc(X)
+    };
+
+    std::map<TokenType, int> precedences = {
+            {EQ, EQUALS},
+            {NOT_EQ, EQUALS},
+            {LT, LESSGREATER},
+            {GT, LESSGREATER},
+            {PLUS, SUM},
+            {MINUS, SUM},
+            {SLASH, PRODUCT},
+            {ASTERISK, PRODUCT},
+    };
 
     // 전위, 중위 연산자 부분
     using prefixParseFn = Expression* (Parser::*)();
-    typedef Expression* (Parser::*infixParseFn)();
+    using infixParseFn =  Expression* (Parser::*)(Expression*);
     std::map<TokenType, prefixParseFn> prefixParseFns;
     std::map<TokenType, infixParseFn> infixParseFns;
 
-    Expression* parseIdentifier() {
-        Identifier* identifier = new Identifier;
-        identifier->token = curToken;
-        identifier->value = curToken.Literal;
-        return identifier;
-    }
+    Expression* parseIdentifier();
+    Expression* parseIntegerLiteral();
+    Expression* parsePrefixExpression();
+    Expression* parseInfixExpression(Expression* left);
 
 
     // 생성자
@@ -44,6 +65,19 @@ public:
         infixParseFns.clear();
 
         registerPrefix(IDENTIFIER, &Parser::parseIdentifier);
+        registerPrefix(INTEGER, &Parser::parseIntegerLiteral);
+        registerPrefix(BANG, &Parser::parsePrefixExpression);
+        registerPrefix(MINUS, &Parser::parsePrefixExpression);
+
+        registerInfix(PLUS, &Parser::parseInfixExpression);
+        registerInfix(MINUS, &Parser::parseInfixExpression);
+        registerInfix(SLASH, &Parser::parseInfixExpression);
+        registerInfix(ASTERISK, &Parser::parseInfixExpression);
+        registerInfix(EQ, &Parser::parseInfixExpression);
+        registerInfix(NOT_EQ, &Parser::parseInfixExpression);
+        registerInfix(LT, &Parser::parseInfixExpression);
+        registerInfix(GT, &Parser::parseInfixExpression);
+
 
         nextToken();
         nextToken();
@@ -72,19 +106,15 @@ public:
     void registerInfix(TokenType tokenType, infixParseFn fn) {
         infixParseFns.insert({tokenType, fn});
     }
+
+    void noPrefixParseFnError(TokenType t);
+
+    int peekPrecedence();
+    int curPrecedence();
 };
 
 
-// 우선 순위
-enum precedence {
-    LOWEST,
-    EQUALS, // ==
-    LESSGREATER, // >, <
-    SUM, // +
-    PRODUCT, // *
-    PREFIX, // -X, !X
-    CALL, // myFunc(X)
-};
+
 
 
 
