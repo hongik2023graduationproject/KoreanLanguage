@@ -130,8 +130,40 @@ public:
     std::string TokenLiteral() override;
     std::string String() override;
     void expressionNode() override;
-
-
 };
+
+class Boolean : public Expression {
+public:
+    Token token;
+    bool value;
+
+    std::string TokenLiteral() override;
+    std::string String() override;
+    void expressionNode() override;
+};
+
+class BlockStatement : public Statement {
+public:
+    Token token;
+    std::vector<Statement*> Statements;
+
+    std::string TokenLiteral() override;
+    std::string String() override;
+    void statementNode() override;
+};
+
+class IfExpression : public Expression {
+public:
+    Token token; // if 토큰
+    Expression* Condition;
+    BlockStatement* Consequence;
+    BlockStatement* Alternative;
+
+    std::string TokenLiteral() override;
+    std::string String() override;
+    void expressionNode() override;
+};
+
+
 
 #endif //KOREANLANGUAGE_AST_H

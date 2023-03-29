@@ -25,7 +25,6 @@ std::string Program::String() {
 }
 
 
-
 // Identifier Node
 std::string Identifier::TokenLiteral() {
     return token.Literal;
@@ -42,7 +41,7 @@ std::string AssignStatement::TokenLiteral() {
     return token.Literal;
 }
 std::string AssignStatement::String() {
-    std::string s = TokenLiteral() + " " + name->String() + " = ";
+    std::string s = name->String() + " " + TokenLiteral() + " = ";
     if (value != nullptr) {
         s += value->String() + "\n";
     }
@@ -115,4 +114,42 @@ std::string InfixExpression::String() {
 void InfixExpression::expressionNode() {}
 
 
+// Boolean
+std::string Boolean::TokenLiteral() {
+    return token.Literal;
+}
+std::string Boolean::String() {
+    return token.Literal;
+}
+void Boolean::expressionNode() {}
+
+
+// BlockStatement
+std::string BlockStatement::TokenLiteral() {
+    return token.Literal;
+}
+std::string BlockStatement::String() {
+    std::string s;
+    for (auto it : Statements) {
+        s += it->String();
+    }
+    return s;
+}
+void BlockStatement::statementNode() {}
+
+// IfExpression
+std::string IfExpression::TokenLiteral() {
+    return token.Literal;
+}
+std::string IfExpression::String() {
+    std::string s;
+    s += "if" + Condition->String() + " " + Consequence->String();
+
+    if (Alternative != nullptr) {
+        s += "else " + Alternative->String();
+    }
+
+    return s;
+}
+void IfExpression::expressionNode() {}
 

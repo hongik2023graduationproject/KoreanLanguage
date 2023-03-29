@@ -16,7 +16,7 @@ struct Token {
 };
 
 
-// TokenType...
+// TokenType
 // TODO: TokenType도 하나로 묶어서 관리하면 좋을 거 같습니다.
 const TokenType ILLEGAL = "ILLEGAL"; // 알 수 없음
 const TokenType Eof = "EOF"; // End Of FIle
@@ -59,6 +59,11 @@ const TokenType IF = "IF";
 const TokenType ELSE = "ELSE";
 const TokenType RETURN = "RETURN";
 
+// space
+const TokenType SPACE = "SPACE";
+const TokenType TAB = "TAB";
+const TokenType NL = "NEWLINE";
+
 class TokenFunctions {
 public:
     std::map<std::string, TokenType> keywords = {
@@ -77,8 +82,6 @@ public:
         }
         return IDENTIFIER;
     }
-
-
 };
 
 

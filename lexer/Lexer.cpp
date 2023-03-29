@@ -31,8 +31,6 @@ void Lexer::readChar() {
 Token Lexer::NextToken() {
     Token tok;
 
-    skipWhitespace();
-
     if (ch == "=") {
         if (peekChar() == "=") {
             std::string c = ch;
@@ -75,6 +73,22 @@ Token Lexer::NextToken() {
         tok = newToken(RBRACE, ch);
     } else if (ch == std::string(1, EOF)) {
         tok = newToken(Eof, "");
+    } else if (ch == " ") {
+// TODO: space 4개가 되면 TAB으로 처리하게끔 로직
+//  - 지금은 여러 개의 space가 와도 하나의 space로 인식
+        int spaceCnt = 1;
+        while (peekChar() == " ") {
+            readChar();
+            spaceCnt++;
+        }
+        tok = newToken(SPACE, " ");
+
+    } else if (ch == "\t") {
+        // TODO: space와 tab이 혼용되었을 때 의도한 대로 작동하지 않을 수 있음
+        //      - 예시) space * 2 + tab + space * 2
+        tok = newToken(TAB, "\t");
+    } else if (ch == "\n") { // 작동 안하는 중
+        tok = newToken(NL, "\n");
     } else {
         if (isLetter(ch)) {
             std::string literal = readIdentifier();
@@ -88,11 +102,9 @@ Token Lexer::NextToken() {
         }
     }
 
-
     readChar();
     return tok;
 }
-
 
 
 std::string Lexer::readIdentifier() {
@@ -112,12 +124,6 @@ std::string Lexer::readNumber() {
     return input.substr(p, position - p);
 }
 
-void Lexer::skipWhitespace() {
-    while (ch == " " || ch == "\t" || ch == "\n" || ch == "\r") {
-        readChar();
-    }
-}
-
 std::string Lexer::peekChar() {
     if (readPosition >= input.length()) {
         return std::string(1, EOF);
@@ -131,7 +137,7 @@ bool isLetter(const std::string& ch) {
     if ((int)ch.length() == 1)
         return ("a" <= ch && ch <= "z") || ("A" <= ch && ch <= "Z") || ch == "_";
     else if ((int)ch.length() == 3)
-        return ("가" <= ch && ch <= "핳");
+        return ("가" <= ch && ch <= "힣");
     return false;
 }
 

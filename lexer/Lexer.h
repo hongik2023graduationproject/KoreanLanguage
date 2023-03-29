@@ -27,10 +27,9 @@ public:
     void readChar(); // 한 문자 읽기
     Token NextToken(); // 다음 토큰을 리턴
     std::string peekChar(); // 다음 문자 확인
-    std::string readIdentifier();
-    std::string readNumber();
-    int getCharLen(char c);
-    void skipWhitespace();
+    std::string readIdentifier(); // 식별자 읽기
+    std::string readNumber(); // 정수 읽기
+    int getCharLen(char c); // uft-8 형식의 문자 길이 얻기
 };
 
 

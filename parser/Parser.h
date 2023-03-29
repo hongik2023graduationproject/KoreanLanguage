@@ -13,8 +13,6 @@
 #include "../lexer/Lexer.h"
 #include "../ast/Ast.h"
 
-
-
 class Parser {
 public:
     Lexer& lexer;
@@ -56,7 +54,10 @@ public:
     Expression* parseIntegerLiteral();
     Expression* parsePrefixExpression();
     Expression* parseInfixExpression(Expression* left);
-
+    Expression* parseBoolean();
+    Expression* parseGroupedExpression();
+    Expression* parseIfExpression();
+    BlockStatement* parseBlockStatement();
 
     // 생성자
     Parser(Lexer& lexer) : lexer(lexer) {
@@ -68,6 +69,10 @@ public:
         registerPrefix(INTEGER, &Parser::parseIntegerLiteral);
         registerPrefix(BANG, &Parser::parsePrefixExpression);
         registerPrefix(MINUS, &Parser::parsePrefixExpression);
+        registerPrefix(TRUE, &Parser::parseBoolean);
+        registerPrefix(FALSE, &Parser::parseBoolean);
+        registerPrefix(LPAREN, &Parser::parseGroupedExpression);
+        registerPrefix(IF, &Parser::parseIfExpression);
 
         registerInfix(PLUS, &Parser::parseInfixExpression);
         registerInfix(MINUS, &Parser::parseInfixExpression);
@@ -112,9 +117,6 @@ public:
     int peekPrecedence();
     int curPrecedence();
 };
-
-
-
 
 
 

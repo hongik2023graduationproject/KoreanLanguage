@@ -45,8 +45,76 @@ Expression* Parser::parseInfixExpression(Expression* left) {
     return expression;
 }
 
+Expression* Parser::parseBoolean() {
+    Boolean* ret = new Boolean;
+    ret->token = curToken;
+    ret->value = curTokenIs(TRUE);
+
+    return ret;
+}
+
+Expression* Parser::parseGroupedExpression() {
+    nextToken();
+
+    Expression* exp = parseExpression(LOWEST);
+
+    if (!expectPeek(RPAREN)) {
+        return nullptr;
+    }
+
+    return exp;
+}
+
+Expression* Parser::parseIfExpression() {
+    IfExpression* expression = new IfExpression;
+    expression->token = curToken;
+
+    // TODO: 나중에 문법 명세의 조건에 따라 수정해야함
+    if (!expectPeek(LPAREN)) {
+        return nullptr;
+    }
+
+    nextToken();
+
+    expression->Condition = parseExpression(LOWEST);
+
+    if (!expectPeek(RPAREN)) {
+        return nullptr;
+    }
+
+    if (!expectPeek(LBRACE)) {
+        return nullptr;
+    }
+
+    expression->Consequence = parseBlockStatement();
+
+    if (!expectPeek(LBRACE)) {
+        return nullptr;
+    }
+
+    expression->Alternative = parseBlockStatement();
+
+    return expression;
+}
 
 
+BlockStatement* Parser::parseBlockStatement() {
+    BlockStatement* block = new BlockStatement;
+    block->token = curToken;
+    block->Statements.clear();
+
+    nextToken();
+
+    while (!curTokenIs(RBRACE) && !curTokenIs(Eof)) {
+        Statement* stmt = parseStatement();
+        if (stmt != nullptr) {
+            block->Statements.push_back(stmt);
+        }
+        nextToken();
+    }
+
+    return block;
+}
 
 void Parser::nextToken() {
     curToken = peekToken;
@@ -64,7 +132,7 @@ Program* Parser::ParseProgram() {
         }
 
 
-        // TODO: 임시로 if문 적용
+        // TODO: 임시로 if문 적용, 어떻게 처리해야할 지 모르곘다.
         if (peekTokenIs(Eof)) {
             break;
         }
@@ -100,7 +168,7 @@ AssignStatement* Parser::parseAssignStatement() {
 
     // TODO: EOF을 만날 때까지 표현식을 건너뛴다.
     //      -우항은 아직 패스
-    while (curTokenIs(Eof)) {
+    while (!curTokenIs(Eof)) {
         nextToken();
     }
 
