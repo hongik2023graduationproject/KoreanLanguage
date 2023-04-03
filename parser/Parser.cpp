@@ -16,9 +16,12 @@ Expression* Parser::parseIdentifier() {
 Expression* Parser::parseIntegerLiteral() {
     IntegerLiteral* lit = new IntegerLiteral;
     lit->token = curToken;
-    lit->value = stoi(curToken.Literal);
-
-    // TODO: string to integer처리 중 발생하는 에러처리 필요
+    try{
+        lit->value = stoi(curToken.Literal);
+    }catch(std::out_of_range &expn){
+        this->errors.emplace_back(expn.what());
+    }
+    // string to integer처리 중 발생하는 에러처리 필요 -> std::exception 이용
     return lit;
 }
 Expression* Parser::parsePrefixExpression() {

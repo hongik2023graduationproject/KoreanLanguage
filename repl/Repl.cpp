@@ -28,22 +28,22 @@
         }
 
 
-//        // parsing
-//        Parser* parser = new Parser(*lexer);
-//        Program* program = parser->ParseProgram(); // program은 parsing된 프로그램의 root node
-//
-//
-//        // if exist error
-//        if (parser->Errors().size() != 0) {
-//            for (auto it : parser->Errors()) {
-//                std::cout << it << '\n';
-//            }
-//        } else {
-//          std::cout << program->String() << '\n';
-//        }
-//        // TODO: 매 입력 라인마다 new, delete를 하는 게 맞는지 생각해보기
-//        delete program;
-//        delete parser;
+        // parsing
+        Parser* parser = new Parser(*lexer);
+        Program* program = parser->ParseProgram(); // program은 parsing된 프로그램의 root node
+
+
+        // if exist error
+        if (parser->Errors().size() != 0) {
+            for (auto it : parser->Errors()) {
+                std::cout << it << '\n';
+            }
+        } else {
+          std::cout << program->String() << '\n';
+        }
+        // TODO: 매 입력 라인마다 new, delete를 하는 게 맞는지 생각해보기
+        delete program;
+        delete parser;
         delete lexer;
     }
 }
