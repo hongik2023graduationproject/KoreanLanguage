@@ -148,7 +148,7 @@ Program* Parser::ParseProgram() {
 
 
 Statement* Parser::parseStatement() {
-    if (curToken.Type == IDENTIFIER && peekToken.Type == ASSIGN) {
+    if (curToken.Type == 이름 && peekToken.Type == 대입) {
         return parseAssignStatement();
     } else if (curToken.Type == RETURN) {
         return parseReturnStatement();

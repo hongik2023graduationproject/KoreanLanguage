@@ -35,30 +35,30 @@ Token Lexer::NextToken() {
         if (peekChar() == "=") {
             std::string c = ch;
             readChar();
-            tok = newToken(EQ, c + ch);
+            tok = newToken(같다, c + ch);
         } else {
-            tok = newToken(ASSIGN, ch);
+            tok = newToken(대입, ch);
         }
     } else if (ch == "+") {
-        tok = newToken(PLUS, ch);
+        tok = newToken(더하기, ch);
     } else if (ch == "-") {
-        tok = newToken(MINUS, ch);
+        tok = newToken(빼기, ch);
     } else if (ch == "*") {
-        tok = newToken(ASTERISK, ch);
+        tok = newToken(곱하기, ch);
     } else if (ch == "/") {
-        tok = newToken(SLASH, ch);
+        tok = newToken(나누기, ch);
     } else if (ch == "!") {
         if (peekChar() == "=") {
             std::string c = ch;
             readChar();
-            tok = newToken(NOT_EQ, c + ch);
+            tok = newToken(다르다, c + ch);
         } else {
             tok = newToken(BANG, ch);
         }
     } else if (ch == "<") {
-        tok = newToken(LT, ch);
+        tok = newToken(작다, ch);
     } else if (ch == ">") {
-        tok = newToken(GT, ch);
+        tok = newToken(크다, ch);
     } else if (ch == ",") {
         tok = newToken(COMMA, ch);
     } else if (ch == ";") {
@@ -82,14 +82,14 @@ Token Lexer::NextToken() {
             spaceCnt++;
             if (spaceCnt == 4) { // space*4 -> tab
                 readChar();
-                return newToken(TAB, "\t");
+                return newToken(탭, "\t");
             }
         }
-        tok = newToken(SPACE, " ");
+        tok = newToken(공백, " ");
     } else if (ch == "\t") {
         // TODO: space와 tab이 혼용되었을 때 의도한 대로 작동하지 않을 수 있음
         //      - 예시) space * 2 + tab + space * 2
-        tok = newToken(TAB, "\t");
+        tok = newToken(탭, "\t");
     } else if (ch == "\n") { // 작동 안하는 중
         tok = newToken(NL, "\n");
     } else {
@@ -98,10 +98,10 @@ Token Lexer::NextToken() {
             tok = newToken(tokenFunctions.LookupIdent(literal), literal);
             return tok;
         } else if (isDigit(ch)) {
-            tok = newToken(INTEGER, readNumber());
+            tok = newToken(정수, readNumber());
             return tok;
         } else {
-            tok = newToken(ILLEGAL, ch);
+            tok = newToken(알수없음, ch);
         }
     }
 
