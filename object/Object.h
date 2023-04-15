@@ -11,6 +11,7 @@
 
 const ObjectType INTEGER_OBJ = "INTEGER";
 const ObjectType BOOLEAN_OBJ = "BOOLEAN";
+const ObjectType NULL_OBJ = "NULL";
 
 class Object {
 public:
@@ -30,6 +31,13 @@ public:
 class Boolean : public Object {
 public:
     bool Value;
+
+    ObjectType Type();
+    std::string Inspect();
+};
+
+class Null : public Object {
+public:
 
     ObjectType Type();
     std::string Inspect();

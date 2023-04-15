@@ -20,7 +20,17 @@ ObjectType Boolean::Type() {
 }
 
 std::string Boolean::Inspect() {
-    return (Value ? "True" : "False");
+    return (Value ? "true" : "false");
+}
+
+
+// Null
+ObjectType Null::Type() {
+    return NULL_OBJ;
+}
+
+std::string Null::Inspect() {
+    return "null";
 }
 
 
