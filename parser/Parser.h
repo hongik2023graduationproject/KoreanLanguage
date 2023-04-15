@@ -34,14 +34,14 @@ public:
     };
 
     std::map<TokenType, int> precedences = {
-            {같다,  EQUALS},
-            {다르다, EQUALS},
-            {작다,  LESSGREATER},
-            {크다,  LESSGREATER},
-            {더하기, SUM},
-            {빼기,  SUM},
-            {나누기, PRODUCT},
-            {곱하기, PRODUCT},
+            {EQ,     EQUALS},
+            {NOT_EQ, EQUALS},
+            {LT,     LESSGREATER},
+            {GT,     LESSGREATER},
+            {PLUS,   SUM},
+            {MINUS,  SUM},
+            {SLASH,  PRODUCT},
+            {곱하기,    PRODUCT},
     };
 
     // 전위, 중위 연산자 부분
@@ -65,23 +65,23 @@ public:
         prefixParseFns.clear();
         infixParseFns.clear();
 
-        registerPrefix(이름, &Parser::parseIdentifier);
-        registerPrefix(정수, &Parser::parseIntegerLiteral);
+        registerPrefix(IDENTIFIER, &Parser::parseIdentifier);
+        registerPrefix(INTEGER, &Parser::parseIntegerLiteral);
         registerPrefix(BANG, &Parser::parsePrefixExpression);
-        registerPrefix(빼기, &Parser::parsePrefixExpression);
+        registerPrefix(MINUS, &Parser::parsePrefixExpression);
         registerPrefix(TRUE, &Parser::parseBoolean);
         registerPrefix(FALSE, &Parser::parseBoolean);
         registerPrefix(LPAREN, &Parser::parseGroupedExpression);
-        registerPrefix(만약, &Parser::parseIfExpression);
+        registerPrefix(IF, &Parser::parseIfExpression);
 
-        registerInfix(더하기, &Parser::parseInfixExpression);
-        registerInfix(빼기, &Parser::parseInfixExpression);
-        registerInfix(나누기, &Parser::parseInfixExpression);
+        registerInfix(PLUS, &Parser::parseInfixExpression);
+        registerInfix(MINUS, &Parser::parseInfixExpression);
+        registerInfix(SLASH, &Parser::parseInfixExpression);
         registerInfix(곱하기, &Parser::parseInfixExpression);
-        registerInfix(같다, &Parser::parseInfixExpression);
-        registerInfix(다르다, &Parser::parseInfixExpression);
-        registerInfix(작다, &Parser::parseInfixExpression);
-        registerInfix(크다, &Parser::parseInfixExpression);
+        registerInfix(EQ, &Parser::parseInfixExpression);
+        registerInfix(NOT_EQ, &Parser::parseInfixExpression);
+        registerInfix(LT, &Parser::parseInfixExpression);
+        registerInfix(GT, &Parser::parseInfixExpression);
 
 
         nextToken();

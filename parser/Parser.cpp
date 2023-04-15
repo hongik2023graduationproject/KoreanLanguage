@@ -148,7 +148,7 @@ Program* Parser::ParseProgram() {
 
 
 Statement* Parser::parseStatement() {
-    if (curToken.Type == 이름 && peekToken.Type == 대입) {
+    if (curToken.Type == IDENTIFIER && peekToken.Type == ASSIGN) {
         return parseAssignStatement();
     } else if (curToken.Type == RETURN) {
         return parseReturnStatement();
@@ -199,7 +199,7 @@ ExpressionStatement* Parser::parseExpressionStatement() {
 
 
     // TODO: 우리는 Eof로 처리하므로 다음 토큰이 Eof가 아니라면 에러 처리를 해야한다.
-    //      -식별자만 한 줄에 주어질 경우 에러로 처리하지 않으려면 에러처리를 안해도 될 거 같다.
+    //      -식별자만 한 줄에 주어질 경우 에러로 처리하지 않으려면 에러처리를 안해도 될 거 EQ.
 
     while (!peekTokenIs(Eof)) {
         nextToken();

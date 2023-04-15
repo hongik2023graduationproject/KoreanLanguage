@@ -69,7 +69,7 @@ public:
 };
 
 // AssignStatement: 값을 변수에 할당하는 문법
-// <이름> = <expression> Eof
+// <IDENTIFIER> = <expression> Eof
 // 의 형식이다.
 class AssignStatement : public Statement {
 public:

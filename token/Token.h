@@ -18,27 +18,28 @@ public:
 
 
 // TokenType
-const TokenType 알수없음 = "알수없음"; // 알 수 없음
+const TokenType ILLEGAL = "ILLEGAL"; // 알 수 없음
 const TokenType Eof = "EOF"; // End Of FIle
 
-// 이름 + 리터럴
-const TokenType 이름 = "이름";
-const TokenType 정수 = "정수";
+// IDENTIFIER + 리터럴
+const TokenType IDENTIFIER = "IDENTIFIER";
+const TokenType INTEGER = "INTEGER";
 
 // 연산자
-const TokenType 대입 = "대입"; // =
-const TokenType 더하기 = "더하기"; // +
-const TokenType 빼기 = "빼기"; // -
-const TokenType 곱하기 = "곱하기"; // *
-const TokenType 나누기 = "나누기"; // /
+const TokenType ASSIGN = "ASSIGN"; // =
+const TokenType PLUS = "PLUS"; // +
+const TokenType MINUS = "MINUS"; // -
+const TokenType ASTERISK = "ASTERISK"; // *
+const TokenType SLASH = "SLASH"; // /
+
 const TokenType BANG = "BANG"; // !
 
-const TokenType 같다 = "같다"; // ==
-const TokenType 다르다 = "다르다"; // !=
+const TokenType EQ = "EQ"; // ==
+const TokenType NOT_EQ = "NOT_EQ"; // !=
 
 // 비교 연산자
-const TokenType 작다 = "작다"; // <
-const TokenType 크다 = "크다"; // >
+const TokenType LT = "LT"; // <
+const TokenType GT = "GT"; // >
 
 // 특수 문자
 const TokenType COMMA = "COMMA"; // ,
@@ -51,28 +52,28 @@ const TokenType LBRACE = "LBRACE"; // {
 const TokenType RBRACE = "RBRACE"; // }
 
 // 예약어
-const TokenType 함수 = "함수";
+const TokenType FN = "FN";
 const TokenType LET = "LET";
 const TokenType TRUE = "TRUE";
 const TokenType FALSE = "FALSE";
-const TokenType 만약 = "만약";
-const TokenType 아니면 = "아니면";
+const TokenType IF = "IF";
+const TokenType ELSE = "ELSE";
 const TokenType RETURN = "RETURN";
 
 // space
-const TokenType 공백 = "공백";
-const TokenType 탭 = "탭";
+const TokenType SPACE = "SPACE";
+const TokenType TAB = "TAB";
 const TokenType NL = "NEWLINE";
 
 class TokenFunctions {
 public:
     std::map<std::string, TokenType> keywords = {
-            {"함수",     함수},
+            {"FN",     FN},
             {"let",    LET},
             {"true",   TRUE},
             {"false",  FALSE},
-            {"만약",     만약},
-            {"아니면",    아니면},
+            {"IF",     IF},
+            {"ELSE",    ELSE},
             {"return", RETURN},
     };
 
@@ -80,7 +81,7 @@ public:
         if (keywords.find(ident) != keywords.end()) {
             return keywords.find(ident)->second;
         }
-        return 이름;
+        return IDENTIFIER;
     }
 };
 

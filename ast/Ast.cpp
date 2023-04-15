@@ -83,7 +83,7 @@ void ExpressionStatement::statementNode() {}
 
 
 // IntegerLiteral
-// 정수
+// INTEGER
 std::string IntegerLiteral::TokenLiteral() {
     return token.Literal;
 }

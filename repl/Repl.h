@@ -13,7 +13,7 @@
 // Read Eval Print Loop
 class Repl {
 public:
-    [[noreturn]] void Run(); // 시작 함수
+    [[noreturn]] void Run(); // 시작 FN
 };
 
 
