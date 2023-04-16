@@ -5,8 +5,12 @@
 #include "Evaluator.h"
 
 
-Object::Object* Evaluator::Eval(Node node) {
-
+Object::Object* Evaluator::Eval(Node* node) {
+    if (typeid(node) == typeid(IntegerLiteral)) {
+        Object::Integer* integer = new Object::Integer;
+//        integer->Value = node->value;
+        return integer;
+    }
 
 
     return nullptr;

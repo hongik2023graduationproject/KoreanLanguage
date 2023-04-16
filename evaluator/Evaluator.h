@@ -11,7 +11,7 @@
 
 class Evaluator {
 public:
-    Object::Object* Eval(Node node);
+    Object::Object* Eval(Node* node);
 };
 
 
