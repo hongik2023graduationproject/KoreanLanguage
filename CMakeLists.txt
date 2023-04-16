@@ -19,4 +19,4 @@ add_executable(KoreanLanguage
         repl/Repl.cpp
         repl/Repl.h
         token/Token.h
-        main.cpp object/Object.cpp object/Object.h)
+        main.cpp object/Object.cpp object/Object.h evaluator/Evaluator.cpp evaluator/Evaluator.h)

@@ -25,6 +25,7 @@ private:
     std::string readIdentifier(); // 식별자 읽기
     std::string readNumber(); // INTEGER 읽기
     int getCharLen(char c); // uft-8 형식의 문자 길이 얻기
+    void skipWhitespace();
 public:
     // TODO: 아래 두 개는 디버깅을 위해 임시로 public
     std::string input; // 입력
