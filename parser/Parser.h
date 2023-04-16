@@ -34,14 +34,14 @@ public:
     };
 
     std::map<TokenType, int> precedences = {
-            {EQ,     EQUALS},
-            {NOT_EQ, EQUALS},
-            {LT,     LESSGREATER},
-            {GT,     LESSGREATER},
-            {PLUS,   SUM},
-            {MINUS,  SUM},
-            {SLASH,  PRODUCT},
-            {곱하기,    PRODUCT},
+            {EQ,        EQUALS},
+            {NOT_EQ,    EQUALS},
+            {LT,        LESSGREATER},
+            {GT,        LESSGREATER},
+            {PLUS,      SUM},
+            {MINUS,     SUM},
+            {SLASH,     PRODUCT},
+            {ASTERISK,  PRODUCT},
     };
 
     // 전위, 중위 연산자 부분
@@ -77,7 +77,7 @@ public:
         registerInfix(PLUS, &Parser::parseInfixExpression);
         registerInfix(MINUS, &Parser::parseInfixExpression);
         registerInfix(SLASH, &Parser::parseInfixExpression);
-        registerInfix(곱하기, &Parser::parseInfixExpression);
+        registerInfix(ASTERISK, &Parser::parseInfixExpression);
         registerInfix(EQ, &Parser::parseInfixExpression);
         registerInfix(NOT_EQ, &Parser::parseInfixExpression);
         registerInfix(LT, &Parser::parseInfixExpression);

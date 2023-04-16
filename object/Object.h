@@ -13,35 +13,42 @@ const ObjectType INTEGER_OBJ = "INTEGER";
 const ObjectType BOOLEAN_OBJ = "BOOLEAN";
 const ObjectType NULL_OBJ = "NULL";
 
-class Object {
-public:
-    ObjectType Type();
-    std::string Inspect();
-};
+namespace Object {
+
+    class Object {
+    public:
+        ObjectType Type();
+
+        std::string Inspect();
+    };
 
 
-class Integer : public Object {
-public:
-    int Value;
+    class Integer : public Object {
+    public:
+        int Value;
 
-    ObjectType Type();
-    std::string Inspect();
-};
+        ObjectType Type();
 
-class Boolean : public Object {
-public:
-    bool Value;
+        std::string Inspect();
+    };
 
-    ObjectType Type();
-    std::string Inspect();
-};
+    class Boolean : public Object {
+    public:
+        bool Value;
 
-class Null : public Object {
-public:
+        ObjectType Type();
 
-    ObjectType Type();
-    std::string Inspect();
-};
+        std::string Inspect();
+    };
 
+    class Null : public Object {
+    public:
+
+        ObjectType Type();
+
+        std::string Inspect();
+    };
+
+}
 
 #endif //KOREANLANGUAGE_OBJECT_H

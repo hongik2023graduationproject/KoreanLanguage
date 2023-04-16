@@ -5,7 +5,7 @@
 #include "Evaluator.h"
 
 
-Object Evaluator::Eval(Node node) {
+Object::Object* Evaluator::Eval(Node node) {
 
 
 

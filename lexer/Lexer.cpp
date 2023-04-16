@@ -46,7 +46,7 @@ Token Lexer::NextToken() {
     } else if (ch == "-") {
         tok = newToken(MINUS, ch);
     } else if (ch == "*") {
-        tok = newToken(곱하기, ch);
+        tok = newToken(ASTERISK, ch);
     } else if (ch == "/") {
         tok = newToken(SLASH, ch);
     } else if (ch == "!") {
