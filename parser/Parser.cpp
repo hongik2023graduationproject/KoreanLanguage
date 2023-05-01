@@ -158,19 +158,14 @@ Statement* Parser::parseStatement() {
 }
 
 AssignStatement* Parser::parseAssignStatement() {
-    AssignStatement *stmt = new AssignStatement;
-
-    stmt->name = new Identifier;
-    // TODO: 생성자 만들어서 코드 정리하기
-    stmt->name->token = curToken;
-    stmt->name->value = curToken.Literal;
+    AssignStatement *stmt = new AssignStatement(curToken);
 
     nextToken();
     stmt->token = curToken; // =
 
+    nextToken();
+    stmt->value = parseExpression(LOWEST);
 
-    // TODO: EOF을 만날 때까지 표현식을 건너뛴다.
-    //      -우항은 아직 패스
     while (!curTokenIs(Eof)) {
         nextToken();
     }
@@ -183,8 +178,8 @@ ReturnStatement* Parser::parseReturnStatement() {
     ReturnStatement* stmt = new ReturnStatement;
     stmt->token = curToken; // return 토큰
 
-    // TODO: EOF을 만날 때까지 표현식을 건너뛴다.
-    //      -우항은 아직 패스
+    nextToken();
+    stmt->ReturnValue = parseExpression(LOWEST);
     while (curTokenIs(Eof)) {
         nextToken();
     }

@@ -3,7 +3,7 @@
 //
 
 #include "Evaluator.h"
-
+/*
 
 Object::Object* Evaluator::Eval(Node* node) {
     if (typeid(node) == typeid(IntegerLiteral)) {
@@ -15,3 +15,4 @@ Object::Object* Evaluator::Eval(Node* node) {
 
     return nullptr;
 }
+*/

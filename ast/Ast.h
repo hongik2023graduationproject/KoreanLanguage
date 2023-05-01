@@ -77,7 +77,7 @@ public:
     Identifier* name; // 좌변
     Expression* value; // 우변
 
-
+    AssignStatement(const Token& identifier);
     std::string TokenLiteral() override;
     std::string String() override;
     void statementNode() override;

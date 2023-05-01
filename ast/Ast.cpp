@@ -37,11 +37,16 @@ void Identifier::expressionNode() {}
 
 
 // AssignStatement
+AssignStatement::AssignStatement(const Token& identifier) {
+    this->name = new Identifier;
+    this->name->token = identifier;
+    this->name->value = identifier.Literal;
+}
 std::string AssignStatement::TokenLiteral() {
     return token.Literal;
 }
 std::string AssignStatement::String() {
-    std::string s = name->String() + " " + TokenLiteral() + " = ";
+    std::string s = name->String() + " " + TokenLiteral() + " ";
     if (value != nullptr) {
         s += value->String() + "\n";
     }

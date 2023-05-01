@@ -21,12 +21,13 @@
         Lexer* lexer = new Lexer;
         lexer->insert(s);
 
+        /*
        // Lexer test code
         for ( ; lexer->position < lexer->input.size(); ) {
             Token t = lexer->NextToken();
             std::cout << "Token Type: " << t.Type << ", Token Literal: " << t.Literal << '\n';
         }
-
+        */
 
         // parsing
         Parser* parser = new Parser(*lexer);
