@@ -18,6 +18,7 @@ public:
 
 
 // TokenType
+// check -> Lexer에 적용된 토큰
 const TokenType ILLEGAL = "ILLEGAL"; // 알 수 없음
 const TokenType Eof = "EOF"; // End Of FIle
 
@@ -29,43 +30,43 @@ const TokenType BOOLEAN = "BOOLEAN";
 
 // 연산자
 // 사칙연산
-const TokenType PLUS = "PLUS"; // +
-const TokenType MINUS = "MINUS"; // -
-const TokenType ASTERISK = "ASTERISK"; // *
-const TokenType SLASH = "SLASH"; // /
-const TokenType DOUBLESLASH = "DOUBLESLASH"; // //
-const TokenType PERCENT = "PERCENT"; // %
+const TokenType PLUS = "PLUS"; // + check
+const TokenType MINUS = "MINUS"; // - check
+const TokenType ASTERISK = "ASTERISK"; // * check
+const TokenType SLASH = "SLASH"; // / check
+const TokenType DOUBLESLASH = "DOUBLESLASH"; // // check
+const TokenType PERCENT = "PERCENT"; // % check
 
 // 등호 및 대입
-const TokenType ASSIGN = "ASSIGN"; // =
-const TokenType EQ = "EQ"; // ==
-const TokenType NOT_EQ = "NOT_EQ"; // !=
-const TokenType LT = "LT"; // <
-const TokenType GT = "GT"; // >
-const TokenType LE = "LE"; // <=
-const TokenType GE = "GE"; // >=
+const TokenType ASSIGN = "ASSIGN"; // = check
+const TokenType EQ = "EQ"; // == check
+const TokenType NOT_EQ = "NOT_EQ"; // != check
+const TokenType LT = "LT"; // < check
+const TokenType GT = "GT"; // > check
+const TokenType LE = "LE"; // <= check
+const TokenType GE = "GE"; // >= check
 
 // 비트 연산
-const TokenType AND = "AND"; // &
-const TokenType DOUBLEAND = "DOUBLEAND"; // &&
-const TokenType OR = "OR"; // |
-const TokenType DOUBLEOR = "DOUBLEOR"; // ||
-const TokenType BANG = "BANG"; // !
-const TokenType CIRCUMFLEX = "CIRCUMFLEX"; // ^
-const TokenType TILDE = "TILDE"; // ~
-const TokenType SHIFTLEFT = "SHIFTLEFT"; // <<
-const TokenType SHIFTRIGHT = "SHIFTRIGHT"; // >>
+const TokenType AND = "AND"; // & check
+const TokenType DOUBLEAND = "DOUBLEAND"; // && check
+const TokenType OR = "OR"; // | check
+const TokenType DOUBLEOR = "DOUBLEOR"; // || check
+const TokenType BANG = "BANG"; // ! check
+const TokenType CIRCUMFLEX = "CIRCUMFLEX"; // ^ check
+const TokenType TILDE = "TILDE"; // ~ check
+const TokenType SHIFTLEFT = "SHIFTLEFT"; // << check
+const TokenType SHIFTRIGHT = "SHIFTRIGHT"; // >> check
 
 
 // 특수 문자
-const TokenType COMMA = "COMMA"; // ,
-const TokenType SEMICOLON = "SEMICOLON"; // ;
+const TokenType COMMA = "COMMA"; // , check
+const TokenType SEMICOLON = "SEMICOLON"; // ; check
 
 // 괄호
-const TokenType LPAREN = "LPAREN"; // (
-const TokenType RPAREN = "RPAREN"; // )
-const TokenType LBRACE = "LBRACE"; // {
-const TokenType RBRACE = "RBRACE"; // }
+const TokenType LPAREN = "LPAREN"; // ( check
+const TokenType RPAREN = "RPAREN"; // ) check
+const TokenType LBRACE = "LBRACE"; // { check
+const TokenType RBRACE = "RBRACE"; // } check
 
 // 예약어
 const TokenType FUNCTION = "FUNCTION";

@@ -1,7 +1,6 @@
 //
 // Created by 김성민 on 2023/03/04.
 //
-
 #include "Lexer.h"
 
 
@@ -47,8 +46,16 @@ Token Lexer::NextToken() {
         tok = newToken(MINUS, ch);
     } else if (ch == "*") {
         tok = newToken(ASTERISK, ch);
+    } else if (ch == "%") {
+        tok = newToken(PERCENT, ch);
     } else if (ch == "/") {
-        tok = newToken(SLASH, ch);
+        if (peekChar() == "/") {
+            std::string c = ch;
+            readChar();
+            tok = newToken(DOUBLESLASH, c + ch);
+        } else {
+            tok = newToken(SLASH, ch);
+        }
     } else if (ch == "!") {
         if (peekChar() == "=") {
             std::string c = ch;
@@ -57,10 +64,50 @@ Token Lexer::NextToken() {
         } else {
             tok = newToken(BANG, ch);
         }
+    } else if (ch == "&") {
+        if (peekChar() == "&") {
+            std::string c = ch;
+            readChar();
+            tok = newToken(DOUBLEAND, c + ch);
+        } else {
+            tok = newToken(AND, ch);
+        }
+    } else if (ch == "|") {
+        if (peekChar() == "|") {
+            std::string c = ch;
+            readChar();
+            tok = newToken(DOUBLEOR, c + ch);
+        } else {
+            tok = newToken(OR, ch);
+        }
     } else if (ch == "<") {
-        tok = newToken(LT, ch);
+        if (peekChar() == "=") {
+            std::string c = ch;
+            readChar();
+            tok = newToken(LE, c + ch);
+        } else if (peekChar() == "<") {
+            std::string c = ch;
+            readChar();
+            tok = newToken(SHIFTLEFT, c + ch);
+        } else {
+            tok = newToken(LT, ch);
+        }
     } else if (ch == ">") {
-        tok = newToken(GT, ch);
+        if (peekChar() == "=") {
+            std::string c = ch;
+            readChar();
+            tok = newToken(GE, c + ch);
+        } else if (peekChar() == ">") {
+            std::string c = ch;
+            readChar();
+            tok = newToken(SHIFTRIGHT, c + ch);
+        } else {
+            tok = newToken(GT, ch);
+        }
+    } else if (ch == "^") {
+        tok = newToken(CIRCUMFLEX, ch);
+    } else if (ch == "~") {
+        tok = newToken(TILDE, ch);
     } else if (ch == ",") {
         tok = newToken(COMMA, ch);
     } else if (ch == ";") {
@@ -93,7 +140,7 @@ Token Lexer::NextToken() {
         //      - 예시) space * 2 + tab + space * 2
         tok = newToken(TAB, "\t");
     } else if (ch == "\n") { // 작동 안하는 중
-        tok = newToken(NL, "\n");
+        tok = newToken(NEWLINE, "\n");
     } else {
         if (isLetter(ch)) {
             std::string literal = readIdentifier();
