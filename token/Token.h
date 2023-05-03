@@ -21,25 +21,41 @@ public:
 const TokenType ILLEGAL = "ILLEGAL"; // 알 수 없음
 const TokenType Eof = "EOF"; // End Of FIle
 
-// IDENTIFIER + 리터럴
 const TokenType IDENTIFIER = "IDENTIFIER";
+
 const TokenType INTEGER = "INTEGER";
+const TokenType FLOAT = "FLOAT";
+const TokenType BOOLEAN = "BOOLEAN";
 
 // 연산자
-const TokenType ASSIGN = "ASSIGN"; // =
+// 사칙연산
 const TokenType PLUS = "PLUS"; // +
 const TokenType MINUS = "MINUS"; // -
 const TokenType ASTERISK = "ASTERISK"; // *
 const TokenType SLASH = "SLASH"; // /
+const TokenType DOUBLESLASH = "DOUBLESLASH"; // //
+const TokenType PERCENT = "PERCENT"; // %
 
-const TokenType BANG = "BANG"; // !
-
+// 등호 및 대입
+const TokenType ASSIGN = "ASSIGN"; // =
 const TokenType EQ = "EQ"; // ==
 const TokenType NOT_EQ = "NOT_EQ"; // !=
-
-// 비교 연산자
 const TokenType LT = "LT"; // <
 const TokenType GT = "GT"; // >
+const TokenType LE = "LE"; // <=
+const TokenType GE = "GE"; // >=
+
+// 비트 연산
+const TokenType AND = "AND"; // &
+const TokenType DOUBLEAND = "DOUBLEAND"; // &&
+const TokenType OR = "OR"; // |
+const TokenType DOUBLEOR = "DOUBLEOR"; // ||
+const TokenType BANG = "BANG"; // !
+const TokenType CIRCUMFLEX = "CIRCUMFLEX"; // ^
+const TokenType TILDE = "TILDE"; // ~
+const TokenType SHIFTLEFT = "SHIFTLEFT"; // <<
+const TokenType SHIFTRIGHT = "SHIFTRIGHT"; // >>
+
 
 // 특수 문자
 const TokenType COMMA = "COMMA"; // ,
@@ -52,8 +68,10 @@ const TokenType LBRACE = "LBRACE"; // {
 const TokenType RBRACE = "RBRACE"; // }
 
 // 예약어
-const TokenType FN = "FN";
-const TokenType LET = "LET";
+const TokenType FUNCTION = "FUNCTION";
+const TokenType CLASS = "CLASS";
+const TokenType FOR = "FOR";
+const TokenType WHILE = "WHILE";
 const TokenType TRUE = "TRUE";
 const TokenType FALSE = "FALSE";
 const TokenType IF = "IF";
@@ -63,17 +81,19 @@ const TokenType RETURN = "RETURN";
 // space
 const TokenType SPACE = "SPACE";
 const TokenType TAB = "TAB";
-const TokenType NL = "NEWLINE";
+const TokenType NEWLINE = "NEWLINE";
 
 class TokenFunctions {
 public:
     std::map<std::string, TokenType> keywords = {
-            {"FN",     FN},
-            {"let",    LET},
+            {"fn",     FUNCTION},
+            {"class", CLASS},
+            {"for", FOR},
+            {"while", WHILE},
             {"true",   TRUE},
             {"false",  FALSE},
-            {"IF",     IF},
-            {"ELSE",    ELSE},
+            {"if",     IF},
+            {"else",    ELSE},
             {"return", RETURN},
     };
 

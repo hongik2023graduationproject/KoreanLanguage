@@ -6,8 +6,9 @@
 
 Object::Object* Evaluator::Eval(Node* node) {
     if (typeid(node) == typeid(IntegerLiteral)) {
+        IntegerLiteral* temp = dynamic_cast<IntegerLiteral*>(node);
         Object::Integer* integer = new Object::Integer;
-//        integer->Value = node->value;
+        integer->Value = temp->value;
         return integer;
     }
 
