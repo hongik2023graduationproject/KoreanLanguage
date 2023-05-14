@@ -43,7 +43,13 @@ Token Lexer::NextToken() {
     } else if (ch == "+") {
         tok = newToken(PLUS, ch);
     } else if (ch == "-") {
-        tok = newToken(MINUS, ch);
+        if (peekChar() == ">") {
+            std::string c = ch;
+            readChar();
+            tok = newToken(RARROW, c + ch);
+        } else {
+            tok = newToken(MINUS, ch);
+        }
     } else if (ch == "*") {
         tok = newToken(ASTERISK, ch);
     } else if (ch == "%") {

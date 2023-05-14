@@ -164,6 +164,17 @@ public:
     void expressionNode() override;
 };
 
+class FunctionStatement : public Statement{
+public:
+    Token token;
+    Identifier * name;
+    std::vector<Identifier *> parameters;
+    BlockStatement * body;
+    Identifier * retType = nullptr;
 
+    std::string TokenLiteral() override;
+    std::string String() override;
+    void statementNode() override;
+};
 
 #endif //KOREANLANGUAGE_AST_H

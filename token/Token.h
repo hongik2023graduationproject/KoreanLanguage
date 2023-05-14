@@ -57,6 +57,8 @@ const TokenType TILDE = "TILDE"; // ~ check
 const TokenType SHIFTLEFT = "SHIFTLEFT"; // << check
 const TokenType SHIFTRIGHT = "SHIFTRIGHT"; // >> check
 
+//
+const TokenType RARROW = "RARROW"; // ->
 
 // 특수 문자
 const TokenType COMMA = "COMMA"; // , check

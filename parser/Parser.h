@@ -59,6 +59,7 @@ public:
     Expression* parseIfExpression();
     BlockStatement* parseBlockStatement();
 
+
     // 생성자
     Parser(Lexer& lexer) : lexer(lexer) {
         errors.clear();
@@ -83,7 +84,6 @@ public:
         registerInfix(LT, &Parser::parseInfixExpression);
         registerInfix(GT, &Parser::parseInfixExpression);
 
-
         nextToken();
         nextToken();
     };
@@ -97,6 +97,7 @@ public:
     AssignStatement* parseAssignStatement();
     ReturnStatement* parseReturnStatement();
     ExpressionStatement* parseExpressionStatement();
+    FunctionStatement * parseFunctionStatement();
 
     bool expectPeek(TokenType t);
     bool curTokenIs(TokenType t);
@@ -116,6 +117,7 @@ public:
 
     int peekPrecedence();
     int curPrecedence();
+
 };
 
 

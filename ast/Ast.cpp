@@ -158,3 +158,12 @@ std::string IfExpression::String() {
 }
 void IfExpression::expressionNode() {}
 
+std::string FunctionStatement::TokenLiteral() {
+    return token.Literal;
+}
+
+std::string FunctionStatement::String() {
+    return std::string(); // todo : 채우기
+}
+
+void FunctionStatement::statementNode() {}

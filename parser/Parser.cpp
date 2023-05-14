@@ -13,6 +13,7 @@ Expression* Parser::parseIdentifier() {
     identifier->value = curToken.Literal;
     return identifier;
 }
+
 Expression* Parser::parseIntegerLiteral() {
     IntegerLiteral* lit = new IntegerLiteral;
     lit->token = curToken;
@@ -24,6 +25,7 @@ Expression* Parser::parseIntegerLiteral() {
     // string to integer처리 중 발생하는 에러처리 필요 -> std::exception 이용
     return lit;
 }
+
 Expression* Parser::parsePrefixExpression() {
     PrefixExpression* expression = new PrefixExpression;
     expression->token = curToken;
@@ -70,16 +72,16 @@ Expression* Parser::parseGroupedExpression() {
 
 Expression* Parser::parseIfExpression() {
     IfExpression* expression = new IfExpression;
-    expression->token = curToken;
+    expression->token = curToken; // if
 
-    // TODO: 나중에 문법 명세의 조건에 따라 수정해야함
     if (!expectPeek(LPAREN)) {
-        return nullptr;
+        return nullptr; // Error로 처리해야 하는지?
     }
 
     nextToken();
 
     expression->Condition = parseExpression(LOWEST);
+    // TODO : condition이 아닐 경우 error
 
     if (!expectPeek(RPAREN)) {
         return nullptr;
@@ -152,12 +154,16 @@ Statement* Parser::parseStatement() {
         return parseAssignStatement();
     } else if (curToken.Type == RETURN) {
         return parseReturnStatement();
-    } else {
+    } else if(curToken.Type == FUNCTION){
+        return parseFunctionStatement();
+    }
+    else {
         return parseExpressionStatement();
     }
 }
 
 AssignStatement* Parser::parseAssignStatement() {
+    // TODO: 이후 <type> <identifier> = <expression> <eof> 형태로 조건 수정
     AssignStatement *stmt = new AssignStatement(curToken);
 
     nextToken();
@@ -274,3 +280,38 @@ int Parser::peekPrecedence() {
     }
     return LOWEST;
 }
+
+//Expression* Parser::parseType(){
+//    Expression * typ =
+//}
+
+FunctionStatement * Parser::parseFunctionStatement() {
+    // 'fn' <type> <ident> '(' <param> ')' ['->' <type>] { block }
+    FunctionStatement * lit = new FunctionStatement;
+    lit->token = curToken; // fn
+
+    // Type Assignment
+
+    nextToken();
+    lit->name = parseIdentifier();
+
+    if(!expectPeek(LPAREN)){
+        return nullptr; // Error
+    }
+
+    lit->parameters = parseFunctionParameters();
+
+    if(peekToken.Type == RARROW){
+        lit->retType = parseType();
+    }
+
+    if(!expectPeek(LBRACE)){
+        return nullptr; // Error
+    }
+
+    lit->body = parseBlockStatement();
+
+    return lit;
+}
+
+// todo : implement parseFunctionParameters
