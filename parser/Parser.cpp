@@ -81,7 +81,6 @@ Expression* Parser::parseIfExpression() {
     nextToken();
 
     expression->Condition = parseExpression(LOWEST);
-    // TODO : condition이 아닐 경우 error
 
     if (!expectPeek(RPAREN)) {
         return nullptr;
@@ -93,9 +92,11 @@ Expression* Parser::parseIfExpression() {
 
     expression->Consequence = parseBlockStatement();
 
-    if (!expectPeek(LBRACE)) {
+    if (curToken.Type == RBRACE) { // expectPeek 오류로 인해 수정, 위의 함수 반환 후 curToken이 RBRACE임
         return nullptr;
     }
+
+    // todo : else token 없이 바로 alternative 진행중인 코드 수정
 
     expression->Alternative = parseBlockStatement();
 
@@ -293,16 +294,19 @@ FunctionStatement * Parser::parseFunctionStatement() {
     // Type Assignment
 
     nextToken();
-    lit->name = parseIdentifier();
+    lit->name = (Identifier *)parseIdentifier(); // type casting?
 
-    if(!expectPeek(LPAREN)){
+    nextToken();
+    if(peekToken.Type == LPAREN){
         return nullptr; // Error
     }
 
-    lit->parameters = parseFunctionParameters();
+    parseFunctionParameters(lit->parameters);
 
     if(peekToken.Type == RARROW){
-        lit->retType = parseType();
+        nextToken();
+        nextToken();
+        lit->retType = (Identifier *)parseIdentifier(); // Type 처리 : 일단은 Identifier 로 넘기자
     }
 
     if(!expectPeek(LBRACE)){
@@ -314,4 +318,43 @@ FunctionStatement * Parser::parseFunctionStatement() {
     return lit;
 }
 
-// todo : implement parseFunctionParameters
+void Parser::parseFunctionParameters(std::vector<std::pair<Identifier *, Identifier *>> & parameters){
+    if(peekToken.Type == RPAREN){
+        nextToken();
+        nextToken();
+        return;
+    }
+
+    nextToken();
+
+    Identifier * paramType = new Identifier;
+    Identifier * paramName = new Identifier;
+    paramType->token = curToken;
+    paramType->value = curToken.Literal;
+
+    nextToken();
+    paramName->token = curToken;
+    paramName->value = curToken.Literal;
+    parameters.emplace_back(paramType, paramName);
+
+    while(peekToken.Type == COMMA){
+        nextToken();
+        nextToken();
+        paramType = new Identifier;
+        paramType->token = curToken;
+        paramType->value = curToken.Literal;
+
+        nextToken();
+        paramName = new Identifier;
+        paramName->token = curToken;
+        paramName->value = curToken.Literal;
+
+        parameters.emplace_back(paramType, paramName);
+    }
+
+    if(!expectPeek(RPAREN)){
+        // Todo : 에러 처리, null 반환 불가능 -> bool 반환하여 false면 caller에서 null반환 하도록 하자!
+        return;
+    }
+
+};

@@ -168,7 +168,7 @@ class FunctionStatement : public Statement{
 public:
     Token token;
     Identifier * name;
-    std::vector<Identifier *> parameters;
+    std::vector<std::pair<Identifier *, Identifier *>> parameters;
     BlockStatement * body;
     Identifier * retType = nullptr;
 

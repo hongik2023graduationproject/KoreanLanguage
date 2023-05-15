@@ -163,7 +163,16 @@ std::string FunctionStatement::TokenLiteral() {
 }
 
 std::string FunctionStatement::String() {
-    return std::string(); // todo : 채우기
+    std::string s = "Function " + name->String() + " (";
+    for(auto it : parameters){
+        s.append(it.first->String());
+        s.push_back(' ');
+        s.append(it.second->String());
+        s.append(", ");
+    }
+    s.append(")\n Return Type :" + retType->String() + "\n");
+    s.append(body->String());
+    return s;
 }
 
 void FunctionStatement::statementNode() {}

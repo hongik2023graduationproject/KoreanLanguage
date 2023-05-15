@@ -16,17 +16,17 @@
         std::cout << ">>> ";
         getline(std::cin, s);
 
-
         // lexing
         Lexer* lexer = new Lexer;
         lexer->insert(s);
 
+        /*
        // Lexer test code
         for ( ; lexer->position < lexer->input.size(); ) {
             Token t = lexer->NextToken();
             std::cout << "Token Type: " << t.Type << ", Token Literal: " << t.Literal << '\n';
         }
-
+        */
         // parsing
         Parser* parser = new Parser(*lexer);
         Program* program = parser->ParseProgram(); // program은 parsing된 프로그램의 root node

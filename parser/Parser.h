@@ -58,6 +58,7 @@ public:
     Expression* parseGroupedExpression();
     Expression* parseIfExpression();
     BlockStatement* parseBlockStatement();
+    Statement* parseType();
 
 
     // 생성자
@@ -99,6 +100,8 @@ public:
     ExpressionStatement* parseExpressionStatement();
     FunctionStatement * parseFunctionStatement();
 
+
+
     bool expectPeek(TokenType t);
     bool curTokenIs(TokenType t);
     bool peekTokenIs(TokenType t);
@@ -117,7 +120,7 @@ public:
 
     int peekPrecedence();
     int curPrecedence();
-
+    void parseFunctionParameters(std::vector<std::pair<Identifier *, Identifier *>> & parameters);
 };
 
 
