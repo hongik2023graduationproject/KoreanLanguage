@@ -57,7 +57,7 @@ const TokenType TILDE = "TILDE"; // ~ check
 const TokenType SHIFTLEFT = "SHIFTLEFT"; // << check
 const TokenType SHIFTRIGHT = "SHIFTRIGHT"; // >> check
 
-//
+// arrow
 const TokenType RARROW = "RARROW"; // ->
 
 // 특수 문자
@@ -81,6 +81,8 @@ const TokenType IF = "IF";
 const TokenType ELSE = "ELSE";
 const TokenType RETURN = "RETURN";
 
+
+
 // space
 const TokenType SPACE = "SPACE";
 const TokenType TAB = "TAB";
@@ -98,6 +100,9 @@ public:
             {"if",     IF},
             {"else",    ELSE},
             {"return", RETURN},
+            {"int", INTEGER},
+            {"float", FLOAT},
+            {"bool", BOOLEAN},
     };
 
     TokenType LookupIdent(const std::string& ident) {

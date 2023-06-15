@@ -5,27 +5,149 @@
 #include "Parser.h"
 
 
-// Parser
+Program* Parser::ParseProgram() {
+    Program* program = new Program; // root node
+
+    while (curToken.Type != Eof) {
+        Statement* stmt = parseStatement();
+        if (stmt != nullptr) {
+            program->statements.push_back(stmt);
+        }
+    }
+    return program;
+}
+
+Statement* Parser::parseStatement() {
+    if (curToken.Type == INTEGER || curToken.Type == FLOAT || curToken.Type == BOOLEAN) {
+        return parseAssignStatement();
+    }
+//    } else if (curToken.Type == RETURN) {
+//        return parseReturnStatement();
+//    } else if (curToken.Type == FUNCTION){
+//        return parseFunctionStatement();
+//    } else {
+//        return parseExpressionStatement();
+//    }
+}
+
+AssignStatement* Parser::parseAssignStatement() {
+    AssignStatement *stmt = new AssignStatement();
+
+    if (!curTokenIs(INTEGER) && curTokenIs(FLOAT) && curTokenIs(BOOLEAN)) {
+        // error
+    }
+    Identifier* ident = new Identifier;
+    ident->type = curToken;
+    nextToken();
+    checkSpace();
+
+
+    ident->token = curToken;
+    ident->value = curToken.Literal;
+    stmt->name = ident;
+    nextToken();
+    checkSpace();
+
+    stmt->token = curToken; // =
+    nextToken();
+    checkSpace();
+
+
+    stmt->value = parseExpression(LOWEST);
+
+    // TODO: 이 구문에 대해 어떻게 개선해야할까
+    while (!curTokenIs(Eof)) {
+        nextToken();
+    }
+
+
+    return stmt;
+}
+
+Expression* Parser::parseExpression(int precedence) {
+    if (prefixParseFns.find(curToken.Type) == prefixParseFns.end()) { // identifier 포함
+        noPrefixParseFnError(curToken.Type);
+        return nullptr;
+    }
+
+    auto prefix = prefixParseFns.find(curToken.Type)->second;
+    Expression* leftExp = (this->*prefix)();
+
+    while (!peekTokenIs(Eof) && precedence < peekPrecedence()) {
+        if (infixParseFns.find(peekToken.Type) == infixParseFns.end()) {
+            return leftExp;
+        }
+        auto infix = infixParseFns.find(peekToken.Type)->second;
+
+        nextToken();
+
+        leftExp = (this->*infix)(leftExp);
+    }
+
+    return leftExp;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Expression* Parser::parseIdentifier() {
     Identifier* identifier = new Identifier;
     identifier->token = curToken;
     identifier->value = curToken.Literal;
+
     return identifier;
 }
+Expression* Parser::parseBoolean() {
+    Boolean* ret = new Boolean;
+    ret->token = curToken;
+    ret->value = curTokenIs(TRUE);
 
+    return ret;
+}
 Expression* Parser::parseIntegerLiteral() {
-    IntegerLiteral* lit = new IntegerLiteral;
+    Integer* lit = new Integer;
     lit->token = curToken;
-    try{
+    try {
         lit->value = stoi(curToken.Literal);
-    }catch(std::out_of_range &expn){
+    } catch(std::out_of_range &expn){
         this->errors.emplace_back(expn.what());
     }
     // string to integer처리 중 발생하는 에러처리 필요 -> std::exception 이용
     return lit;
 }
-
 Expression* Parser::parsePrefixExpression() {
     PrefixExpression* expression = new PrefixExpression;
     expression->token = curToken;
@@ -36,6 +158,117 @@ Expression* Parser::parsePrefixExpression() {
 
     return expression;
 }
+
+
+
+
+
+
+
+
+
+
+
+ReturnStatement* Parser::parseReturnStatement() {
+    ReturnStatement* stmt = new ReturnStatement;
+    stmt->token = curToken; // return 토큰
+    nextToken();
+
+    stmt->ReturnValue = parseExpression(LOWEST);
+    while (curTokenIs(Eof)) {
+        nextToken();
+    }
+
+    return stmt;
+}
+
+FunctionStatement * Parser::parseFunctionStatement() {
+    // 'fn' <type> <ident> '(' <param> ')' ['->' <type>] { block }
+    FunctionStatement *lit = new FunctionStatement;
+    lit->token = curToken; // fn
+
+    // Type Assignment
+    nextToken();
+    lit->retType = curToken; // return type
+
+    nextToken();
+//    lit->name = (Identifier *) parseIdentifier(); // ident
+
+    nextToken();
+    if (curToken.Type != LPAREN) {
+        return nullptr; // Error
+    }
+
+    nextToken();
+    parseFunctionParameters(lit->parameters);
+
+
+    if (peekToken.Type == RARROW){
+        nextToken();
+        nextToken();
+//        lit->retType = (Identifier *)parseIdentifier(); // Type 처리 : 일단은 Identifier 로 넘기자
+    }
+
+    if (!expectPeek(LBRACE)){
+        return nullptr; // Error
+    }
+
+    lit->body = parseBlockStatement();
+
+    return lit;
+}
+
+void Parser::parseFunctionParameters(std::vector<std::pair<Identifier *, Identifier *>> & parameters){
+    if (peekToken.Type == RPAREN){
+        return;
+    }
+
+
+    Identifier* paramType = new Identifier;
+    Identifier* paramName = new Identifier;
+    paramType->token = curToken;
+    paramType->value = curToken.Literal;
+
+    nextToken();
+    paramName->token = curToken;
+    paramName->value = curToken.Literal;
+    parameters.emplace_back(paramType, paramName);
+
+    while (peekToken.Type == COMMA){
+        nextToken();
+        nextToken();
+        paramType = new Identifier;
+        paramType->token = curToken;
+        paramType->value = curToken.Literal;
+
+        nextToken();
+        paramName = new Identifier;
+        paramName->token = curToken;
+        paramName->value = curToken.Literal;
+
+        parameters.emplace_back(paramType, paramName);
+    }
+
+    if (!expectPeek(RPAREN)){
+        // Todo : 에러 처리, null 반환 불가능 -> bool 반환하여 false면 caller에서 null반환 하도록 하자!
+        return;
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Expression* Parser::parseInfixExpression(Expression* left) {
     InfixExpression* expression = new InfixExpression;
@@ -50,13 +283,7 @@ Expression* Parser::parseInfixExpression(Expression* left) {
     return expression;
 }
 
-Expression* Parser::parseBoolean() {
-    Boolean* ret = new Boolean;
-    ret->token = curToken;
-    ret->value = curTokenIs(TRUE);
 
-    return ret;
-}
 
 Expression* Parser::parseGroupedExpression() {
     nextToken();
@@ -98,12 +325,14 @@ Expression* Parser::parseIfExpression() {
 
     // todo : else token 없이 바로 alternative 진행중인 코드 수정
 
+    // TODO: Alternative가 parseBlockStatement가 맞는지... 재귀적으로 구성할 꺼면 If Expression이 적절해보임
     expression->Alternative = parseBlockStatement();
 
     return expression;
 }
 
 
+// Thinking: parseBlockStatement 내부에서 {} 을 처리하자. (나중엔 들여쓰기)
 BlockStatement* Parser::parseBlockStatement() {
     BlockStatement* block = new BlockStatement;
     block->token = curToken;
@@ -127,72 +356,10 @@ void Parser::nextToken() {
     peekToken = lexer.NextToken();
 }
 
-Program* Parser::ParseProgram() {
-    Program* program = new Program; // root node
-
-    while (curToken.Type != Eof) {
-        Statement* stmt = parseStatement();
-
-        if (stmt != nullptr) {
-            program->statements.push_back(stmt);
-        }
 
 
-        // TODO: 임시로 if문 적용, 어떻게 처리해야할 지 모르곘다.
-        if (peekTokenIs(Eof)) {
-            break;
-        }
-
-        nextToken(); // 마지막 토큰인 Eof 이후에 실행되면 SIGTRAP 오류
-    }
-
-    return program;
-}
 
 
-Statement* Parser::parseStatement() {
-    if (curToken.Type == IDENTIFIER && peekToken.Type == ASSIGN) {
-        return parseAssignStatement();
-    } else if (curToken.Type == RETURN) {
-        return parseReturnStatement();
-    } else if(curToken.Type == FUNCTION){
-        return parseFunctionStatement();
-    }
-    else {
-        return parseExpressionStatement();
-    }
-}
-
-AssignStatement* Parser::parseAssignStatement() {
-    // TODO: 이후 <type> <identifier> = <expression> <eof> 형태로 조건 수정
-    AssignStatement *stmt = new AssignStatement(curToken);
-
-    nextToken();
-    stmt->token = curToken; // =
-
-    nextToken();
-    stmt->value = parseExpression(LOWEST);
-
-    while (!curTokenIs(Eof)) {
-        nextToken();
-    }
-
-    return stmt;
-}
-
-
-ReturnStatement* Parser::parseReturnStatement() {
-    ReturnStatement* stmt = new ReturnStatement;
-    stmt->token = curToken; // return 토큰
-
-    nextToken();
-    stmt->ReturnValue = parseExpression(LOWEST);
-    while (curTokenIs(Eof)) {
-        nextToken();
-    }
-
-    return stmt;
-}
 
 ExpressionStatement* Parser::parseExpressionStatement() {
     ExpressionStatement* stmt = new ExpressionStatement;
@@ -210,28 +377,6 @@ ExpressionStatement* Parser::parseExpressionStatement() {
     return stmt;
 }
 
-Expression* Parser::parseExpression(int precedence) {
-    if (prefixParseFns.find(curToken.Type) == prefixParseFns.end()) {
-        noPrefixParseFnError(curToken.Type);
-        return nullptr;
-    }
-
-    auto prefix = prefixParseFns.find(curToken.Type)->second;
-    Expression* leftExp = (this->*prefix)();
-
-    while (!peekTokenIs(Eof) && precedence < peekPrecedence()) {
-        if (infixParseFns.find(peekToken.Type) == infixParseFns.end()) {
-            return leftExp;
-        }
-        auto infix = infixParseFns.find(peekToken.Type)->second;
-
-        nextToken();
-
-        leftExp = (this->*infix)(leftExp);
-    }
-
-    return leftExp;
-}
 
 
 bool Parser::expectPeek(TokenType t) {
@@ -252,14 +397,7 @@ bool Parser::peekTokenIs(TokenType t) {
     return peekToken.Type == t;
 }
 
-std::vector<std::string> Parser::Errors() {
-    return errors;
-}
 
-void Parser::peekError(TokenType t) {
-    std::string msg = "예상 토큰은 " + t + "입니다. 하지만 실제 토큰은 " + peekToken.Type + "입니다.\n";
-    errors.push_back(msg);
-}
 
 void Parser::noPrefixParseFnError(std::string t) {
     errors.push_back("no prefix parse function for " + t + " found.");
@@ -282,79 +420,24 @@ int Parser::peekPrecedence() {
     return LOWEST;
 }
 
-//Expression* Parser::parseType(){
-//    Expression * typ =
-//}
-
-FunctionStatement * Parser::parseFunctionStatement() {
-    // 'fn' <type> <ident> '(' <param> ')' ['->' <type>] { block }
-    FunctionStatement * lit = new FunctionStatement;
-    lit->token = curToken; // fn
-
-    // Type Assignment
-
+void Parser::checkSpace() {
+    if (!curTokenIs(SPACE)) {
+        // error
+    }
     nextToken();
-    lit->name = (Identifier *)parseIdentifier(); // type casting?
-
-    nextToken();
-    if(peekToken.Type == LPAREN){
-        return nullptr; // Error
-    }
-
-    parseFunctionParameters(lit->parameters);
-
-    if(peekToken.Type == RARROW){
-        nextToken();
-        nextToken();
-        lit->retType = (Identifier *)parseIdentifier(); // Type 처리 : 일단은 Identifier 로 넘기자
-    }
-
-    if(!expectPeek(LBRACE)){
-        return nullptr; // Error
-    }
-
-    lit->body = parseBlockStatement();
-
-    return lit;
 }
 
-void Parser::parseFunctionParameters(std::vector<std::pair<Identifier *, Identifier *>> & parameters){
-    if(peekToken.Type == RPAREN){
-        nextToken();
-        nextToken();
-        return;
-    }
 
-    nextToken();
+// errors
+std::vector<std::string> Parser::Errors() {
+    return errors;
+}
 
-    Identifier * paramType = new Identifier;
-    Identifier * paramName = new Identifier;
-    paramType->token = curToken;
-    paramType->value = curToken.Literal;
+void Parser::peekError(TokenType t) {
+    std::string msg = "예상 토큰은 " + t + "입니다. 하지만 실제 토큰은 " + peekToken.Type + "입니다.\n";
+    errors.push_back(msg);
+}
 
-    nextToken();
-    paramName->token = curToken;
-    paramName->value = curToken.Literal;
-    parameters.emplace_back(paramType, paramName);
-
-    while(peekToken.Type == COMMA){
-        nextToken();
-        nextToken();
-        paramType = new Identifier;
-        paramType->token = curToken;
-        paramType->value = curToken.Literal;
-
-        nextToken();
-        paramName = new Identifier;
-        paramName->token = curToken;
-        paramName->value = curToken.Literal;
-
-        parameters.emplace_back(paramType, paramName);
-    }
-
-    if(!expectPeek(RPAREN)){
-        // Todo : 에러 처리, null 반환 불가능 -> bool 반환하여 false면 caller에서 null반환 하도록 하자!
-        return;
-    }
-
-};
+void Parser::makeError(TokenType t) {
+    std::string msg = "예상 토큰은 " + t + "입니다. 하지만 실제 토큰은 " + peekToken.Type + "입니다.\n";
+}

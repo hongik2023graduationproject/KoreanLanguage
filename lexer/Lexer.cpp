@@ -30,7 +30,7 @@ void Lexer::readChar() {
 Token Lexer::NextToken() {
     Token tok;
 
-    skipWhitespace();
+//    skipWhitespace();
 
     if (ch == "=") {
         if (peekChar() == "=") {
@@ -129,18 +129,18 @@ Token Lexer::NextToken() {
     } else if (ch == std::string(1, EOF)) {
         tok = newToken(Eof, "");
     } else if (ch == " ") {
-//// TODO: space 4개가 되면 TAB으로 처리하게끔 로직
-////  - 지금은 여러 개의 space가 와도 하나의 space로 인식
-//        int spaceCnt = 1;
-//        while (peekChar() == " ") { // 2, 3개의 연속된 space는 1개의 space로 취급
-//            readChar();
-//            spaceCnt++;
-//            if (spaceCnt == 4) { // space*4 -> tab
-//                readChar();
-//                return newToken(TAB, "\t");
-//            }
-//        }
-//        tok = newToken(SPACE, " ");
+        // TODO: space 4개가 되면 TAB으로 처리하게끔 로직
+        //  - 지금은 여러 개의 space가 와도 하나의 space로 인식
+        int spaceCnt = 1;
+        while (peekChar() == " ") { // 2, 3개의 연속된 space는 1개의 space로 취급
+            readChar();
+            spaceCnt++;
+            if (spaceCnt == 4) { // space*4 -> tab
+                readChar();
+                return newToken(TAB, "\t");
+            }
+        }
+        tok = newToken(SPACE, " ");
     } else if (ch == "\t") {
         // TODO: space와 tab이 혼용되었을 때 의도한 대로 작동하지 않을 수 있음
         //      - 예시) space * 2 + tab + space * 2

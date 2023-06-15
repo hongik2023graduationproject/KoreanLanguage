@@ -6,6 +6,8 @@
 #define KOREANLANGUAGE_REPL_H
 
 #include <iostream>
+#include <string>
+#include <format>
 
 #include "../parser/Parser.h"
 #include "../lexer/Lexer.h"

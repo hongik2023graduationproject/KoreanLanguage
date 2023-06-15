@@ -16,44 +16,55 @@ std::string Program::TokenLiteral() {
         return "";
     }
 }
-std::string Program::String() {
+std::string Program::Debug() {
     std::string s;
     for (auto it : statements) {
-        s += it->String();
+        s += it->Debug() + " ";
     }
     return s;
 }
 
 
-// Identifier Node
+// Identifier
 std::string Identifier::TokenLiteral() {
     return token.Literal;
 }
-std::string Identifier::String() {
-    return value;
+std::string Identifier::Debug() {
+    return "(" + type.Literal + ")" + value;
 }
-void Identifier::expressionNode() {}
 
+// INTEGER
+std::string Integer::TokenLiteral() {
+    return token.Literal;
+}
+std::string Integer::Debug() {
+    return std::to_string(value);
+}
 
+// Boolean
+std::string Boolean::TokenLiteral() {
+    return token.Literal;
+}
+std::string Boolean::Debug() {
+    return std::to_string(value);
+}
 
 // AssignStatement
-AssignStatement::AssignStatement(const Token& identifier) {
-    this->name = new Identifier;
-    this->name->token = identifier;
-    this->name->value = identifier.Literal;
-}
 std::string AssignStatement::TokenLiteral() {
     return token.Literal;
 }
-std::string AssignStatement::String() {
-    std::string s = name->String() + " " + TokenLiteral() + " ";
-    if (value != nullptr) {
-        s += value->String() + "\n";
-    }
-
-    return s;
+std::string AssignStatement::Debug() {
+    return std::string(name->Debug() + " " + TokenLiteral() + " " + value->Debug() + "\n");
 }
-void AssignStatement::statementNode() {}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -61,15 +72,14 @@ void AssignStatement::statementNode() {}
 std::string ReturnStatement::TokenLiteral() {
     return token.Literal;
 }
-std::string ReturnStatement::String() {
+std::string ReturnStatement::Debug() {
     std::string s = TokenLiteral() + " ";
     if (ReturnValue != nullptr) {
-        s += ReturnValue->String();
+        s += ReturnValue->Debug();
     }
 
     return s;
 }
-void ReturnStatement::statementNode() {}
 
 
 
@@ -77,35 +87,25 @@ void ReturnStatement::statementNode() {}
 std::string ExpressionStatement::TokenLiteral() {
     return token.Literal;
 }
-std::string ExpressionStatement::String() {
+std::string ExpressionStatement::Debug() {
     if (expression != nullptr) {
-        return expression->String();
+        return expression->Debug();
     }
 
     return "";
 }
-void ExpressionStatement::statementNode() {}
 
 
-// IntegerLiteral
-// INTEGER
-std::string IntegerLiteral::TokenLiteral() {
-    return token.Literal;
-}
-std::string IntegerLiteral::String() {
-    return token.Literal;
-}
-void IntegerLiteral::expressionNode() {}
+
 
 
 // PrefixExpression
 std::string PrefixExpression::TokenLiteral() {
     return token.Literal;
 }
-std::string PrefixExpression::String() {
-    return "(" + Operator + Right->String() + ")";
+std::string PrefixExpression::Debug() {
+    return "(" + Operator + Right->Debug() + ")";
 }
-void PrefixExpression::expressionNode() {}
 
 
 
@@ -113,66 +113,55 @@ void PrefixExpression::expressionNode() {}
 std::string InfixExpression::TokenLiteral() {
     return token.Literal;
 }
-std::string InfixExpression::String() {
-    return "(" + Left->String() + " " + Operator + " " + Right->String() + ")";
+std::string InfixExpression::Debug() {
+    return "(" + Left->Debug() + " " + Operator + " " + Right->Debug() + ")";
 }
-void InfixExpression::expressionNode() {}
 
 
-// Boolean
-std::string Boolean::TokenLiteral() {
-    return token.Literal;
-}
-std::string Boolean::String() {
-    return token.Literal;
-}
-void Boolean::expressionNode() {}
+
 
 
 // BlockStatement
 std::string BlockStatement::TokenLiteral() {
     return token.Literal;
 }
-std::string BlockStatement::String() {
+std::string BlockStatement::Debug() {
     std::string s;
     for (auto it : Statements) {
-        s += it->String();
+        s += it->Debug();
     }
     return s;
 }
-void BlockStatement::statementNode() {}
 
 // IfExpression
 std::string IfExpression::TokenLiteral() {
     return token.Literal;
 }
-std::string IfExpression::String() {
+std::string IfExpression::Debug() {
     std::string s;
-    s += "if" + Condition->String() + " " + Consequence->String();
+    s += "if" + Condition->Debug() + " " + Consequence->Debug();
 
     if (Alternative != nullptr) {
-        s += "else " + Alternative->String();
+        s += "else " + Alternative->Debug();
     }
 
     return s;
 }
-void IfExpression::expressionNode() {}
 
 std::string FunctionStatement::TokenLiteral() {
     return token.Literal;
 }
 
-std::string FunctionStatement::String() {
-    std::string s = "Function " + name->String() + " (";
+std::string FunctionStatement::Debug() {
+    std::string s = "Function " + name->Debug() + " (";
     for(auto it : parameters){
-        s.append(it.first->String());
+        s.append(it.first->Debug());
         s.push_back(' ');
-        s.append(it.second->String());
+        s.append(it.second->Debug());
         s.append(", ");
     }
-    s.append(")\n Return Type :" + retType->String() + "\n");
-    s.append(body->String());
+    s.append(")\n Return Type :" + retType.Literal + "\n");
+    s.append(body->Debug());
     return s;
 }
 
-void FunctionStatement::statementNode() {}

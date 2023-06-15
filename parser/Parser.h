@@ -13,9 +13,11 @@
 #include "../lexer/Lexer.h"
 #include "../ast/Ast.h"
 
+
+// TODO: Parser 로직과 parsing 함수를 분리할 필요가 있어 보임
 class Parser {
 public:
-    Lexer& lexer;
+    Lexer& lexer; // TODO: PARSER가 내부적으로 LEXER를 가질 필요가 있는가?
     std::vector<std::string> errors;
 
     Token curToken;
@@ -24,7 +26,7 @@ public:
     // 우선 순위
     // TODO: 나중에 enum class로 변경이 가능하다면 변경하기
     enum precedence {
-        LOWEST,
+        LOWEST, // default
         EQUALS, // ==
         LESSGREATER, // >, <
         SUM, // +
@@ -108,6 +110,7 @@ public:
 
     std::vector<std::string> Errors();
     void peekError(TokenType t);
+    void makeError(TokenType t);
 
     void registerPrefix(TokenType tokenType, prefixParseFn fn) {
         prefixParseFns.insert({tokenType, fn});
@@ -121,6 +124,8 @@ public:
     int peekPrecedence();
     int curPrecedence();
     void parseFunctionParameters(std::vector<std::pair<Identifier *, Identifier *>> & parameters);
+
+    void checkSpace();
 };
 
 
