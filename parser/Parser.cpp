@@ -377,6 +377,37 @@ ExpressionStatement* Parser::parseExpressionStatement() {
     return stmt;
 }
 
+Expression* Parser::parseCallExpression(Expression* function){
+    CallExpression* exp = new CallExpression;
+    // exp->arguments = parseCallArguments();
+    return exp;
+}
+
+std::vector<Expression*> Parser::parseCallArguments(){
+    std::vector<Expression*> args;
+
+    if(peekTokenIs(RPAREN)){
+        nextToken();
+        return args;
+    }
+
+    nextToken();
+    args.push_back(parseExpression(LOWEST));
+
+    while(peekTokenIs(COMMA)){
+        nextToken();
+        nextToken();
+        args.push_back(parseExpression(LOWEST));
+    }
+
+    if(expectPeek(RPAREN)){
+        // return nullptr
+    }
+
+    return args;
+}
+
+
 
 
 bool Parser::expectPeek(TokenType t) {

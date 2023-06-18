@@ -63,6 +63,7 @@ public:
     Statement* parseType();
 
 
+
     // 생성자
     Parser(Lexer& lexer) : lexer(lexer) {
         errors.clear();
@@ -102,7 +103,8 @@ public:
     ExpressionStatement* parseExpressionStatement();
     FunctionStatement * parseFunctionStatement();
 
-
+    std::vector<Expression*> parseCallArguments();
+    Expression* parseCallExpression(Expression* function);
 
     bool expectPeek(TokenType t);
     bool curTokenIs(TokenType t);

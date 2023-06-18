@@ -168,4 +168,13 @@ public:
     std::string Debug() override;
 };
 
+class CallExpression : public Expression{
+    Token token;
+    Expression* function;
+    std::vector<Identifier *> arguments;
+
+    std::string TokenLiteral() override;
+    std::string Debug() override;
+};
+
 #endif //KOREANLANGUAGE_AST_H
